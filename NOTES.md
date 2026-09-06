@@ -168,7 +168,7 @@ Fast Key Mapping records physical keypresses, and this board has no keys above `
 ## Ultimate Software V2 — not available for this board on macOS
 
 Retro 108 support landed in the **Windows v1.10** build. The macOS build's keyboard list covers only the Retro 87 series and Retro 68-N40. So the 3 custom profiles, the macro editor, and firmware updates all require a Windows machine or a VM with USB passthrough.
-* The **Profile button** is effectively inert without that software (I'm exploring whether this is completely true. Stay tuned.). It will still work for the factory-reset combo, but nothing more. Profiles and onboard key mappings are stored separately.
+* The **Profile button** is effectively inert without that software; whether it is *completely* inert is unverified. It will still work for the factory-reset combo, but nothing more. Profiles and onboard key mappings are stored separately.
 
 **Firmware updates aren't critical.** 8BitDo's keyboard-side firmware changelog is Windows quality-of-life work ("optimized macro stability", language/usage fixes) on features unused here. Revisit only if Bluetooth or 2.4G starts misbehaving; even then you'll probably need a Windows instance to update it.
 

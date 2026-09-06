@@ -8,7 +8,7 @@ padlock key wired to Lock Screen, and the dead keys given jobs.
 **Every rule is scoped with `device_unless is_built_in_keyboard`, so any built-in keyboard 
 is left untouched. If you're connected to a laptop, this gives you options.**
 
-There are two files:
+Two files do the work:
 
 | File | What |
 |---|---|
