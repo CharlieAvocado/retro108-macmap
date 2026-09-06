@@ -123,6 +123,7 @@ Everything the rule set changes. Anything not listed here is untouched and behav
 | Left `Alt` | **Command** |
 | Right `Alt` | **Command** |
 | Right `Ctrl` | Option |
+| Right `Shift` | Shift (unchanged). Confirmed reaching macOS in EventViewer — worth checking for yourself, because a typing test will not exercise it if you shift with your left hand only |
 | `A` / `B` Super Buttons | Firmware only — invisible to macOS, programmable with the star key |
 
 ---
@@ -155,6 +156,8 @@ Leave the `"from"` block alone. It deliberately carries no `modifiers` key, whic
 **Never disable a key by mapping it to `F13`-`F20`.** Those are not inert: terminals translate them into escape sequences, so the key inserts a stray character in a text field and reads as history-recall in a TUI. Use `vk_none`.
 
 **Other free slots:** `F4` sends `F13`, `Insert` sends `F16`, and the onboard A/B Super Buttons can carry any chord you record onto them.
+
+Right `Shift` is worth a look too. Plenty of people shift only with the left hand and never touch it, which makes it a full-size key doing nothing. It takes a rule like any other — `"from": { "key_code": "right_shift" }` — though remap it only if you are certain you do not use it, and remember the rule set already moves right `Alt` and right `Ctrl`, so the right-hand modifier row is not where muscle memory expects it.
 
 ---
 
