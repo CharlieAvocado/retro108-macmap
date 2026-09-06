@@ -1,0 +1,592 @@
+{
+  "description": "8bitdo windows commands remap",
+  "manipulators": [
+    {
+      "description": "F1 (sends Win+Alt+PrtScrn) -> Screenshot Area  [needs FN lock engaged]",
+      "from": {
+        "key_code": "print_screen",
+        "modifiers": {
+          "mandatory": [
+            "left_command",
+            "left_option"
+          ]
+        }
+      },
+      "to": [
+        {
+          "key_code": "4",
+          "modifiers": [
+            "left_command",
+            "left_shift"
+          ]
+        }
+      ],
+      "type": "basic",
+      "conditions": [
+        {
+          "type": "device_unless",
+          "identifiers": [
+            {
+              "is_built_in_keyboard": true
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "description": "PrtScrn -> Screenshot Entire Screen",
+      "from": {
+        "key_code": "print_screen"
+      },
+      "to": [
+        {
+          "key_code": "3",
+          "modifiers": [
+            "left_command",
+            "left_shift"
+          ]
+        }
+      ],
+      "type": "basic",
+      "conditions": [
+        {
+          "type": "device_unless",
+          "identifiers": [
+            {
+              "is_built_in_keyboard": true
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "description": "F2 (sends Win+Alt+G) -> Capture Region to Clipboard  [needs FN lock engaged]",
+      "from": {
+        "key_code": "g",
+        "modifiers": {
+          "mandatory": [
+            "left_command",
+            "left_option"
+          ]
+        }
+      },
+      "to": [
+        {
+          "key_code": "4",
+          "modifiers": [
+            "left_command",
+            "left_control",
+            "left_shift"
+          ]
+        }
+      ],
+      "type": "basic",
+      "conditions": [
+        {
+          "type": "device_unless",
+          "identifiers": [
+            {
+              "is_built_in_keyboard": true
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "description": "F3 (record-dot key, sends Win+Alt+R) -> Screenshot/Recording Toolbar  [needs FN lock engaged]",
+      "from": {
+        "key_code": "r",
+        "modifiers": {
+          "mandatory": [
+            "left_command",
+            "left_option"
+          ]
+        }
+      },
+      "to": [
+        {
+          "key_code": "5",
+          "modifiers": [
+            "left_command",
+            "left_shift"
+          ]
+        }
+      ],
+      "type": "basic",
+      "conditions": [
+        {
+          "type": "device_unless",
+          "identifiers": [
+            {
+              "is_built_in_keyboard": true
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "description": "F4 (sends Win+Alt+M) -> F13 for Discord and other software  [needs FN lock engaged]",
+      "from": {
+        "key_code": "m",
+        "modifiers": {
+          "mandatory": [
+            "left_command",
+            "left_option"
+          ]
+        }
+      },
+      "to": [
+        {
+          "key_code": "f13"
+        }
+      ],
+      "type": "basic",
+      "conditions": [
+        {
+          "type": "device_unless",
+          "identifiers": [
+            {
+              "is_built_in_keyboard": true
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "description": "Padlock key (l + left_command within 20ms) -> Lock Screen",
+      "conditions": [
+        {
+          "type": "device_unless",
+          "identifiers": [
+            {
+              "is_built_in_keyboard": true
+            }
+          ]
+        }
+      ],
+      "from": {
+        "simultaneous": [
+          {
+            "key_code": "l"
+          },
+          {
+            "key_code": "left_command"
+          }
+        ],
+        "simultaneous_options": {
+          "key_down_order": "insensitive",
+          "key_up_order": "insensitive"
+        },
+        "modifiers": {
+          "optional": [
+            "any"
+          ]
+        }
+      },
+      "parameters": {
+        "basic.simultaneous_threshold_milliseconds": 20
+      },
+      "to": [
+        {
+          "key_code": "q",
+          "modifiers": [
+            "left_command",
+            "left_control"
+          ]
+        }
+      ],
+      "type": "basic"
+    },
+    {
+      "description": "Fn+Home -> beginning of line (terminal compat)",
+      "from": {
+        "key_code": "home",
+        "modifiers": {
+          "mandatory": [
+            "fn"
+          ]
+        }
+      },
+      "to": [
+        {
+          "key_code": "a",
+          "modifiers": [
+            "left_control"
+          ]
+        }
+      ],
+      "type": "basic",
+      "conditions": [
+        {
+          "type": "device_unless",
+          "identifiers": [
+            {
+              "is_built_in_keyboard": true
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "description": "Fn+End -> end of line (terminal compat)",
+      "from": {
+        "key_code": "end",
+        "modifiers": {
+          "mandatory": [
+            "fn"
+          ]
+        }
+      },
+      "to": [
+        {
+          "key_code": "e",
+          "modifiers": [
+            "left_control"
+          ]
+        }
+      ],
+      "type": "basic",
+      "conditions": [
+        {
+          "type": "device_unless",
+          "identifiers": [
+            {
+              "is_built_in_keyboard": true
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "description": "Delete Forward",
+      "from": {
+        "key_code": "delete_forward"
+      },
+      "to": [
+        {
+          "key_code": "delete_or_backspace",
+          "modifiers": [
+            "fn"
+          ]
+        }
+      ],
+      "type": "basic",
+      "conditions": [
+        {
+          "type": "device_unless",
+          "identifiers": [
+            {
+              "is_built_in_keyboard": true
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "description": "Scroll Lock -> F14",
+      "from": {
+        "key_code": "scroll_lock"
+      },
+      "to": [
+        {
+          "key_code": "f14"
+        }
+      ],
+      "type": "basic",
+      "conditions": [
+        {
+          "type": "device_unless",
+          "identifiers": [
+            {
+              "is_built_in_keyboard": true
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "description": "Pause -> F15",
+      "from": {
+        "key_code": "pause"
+      },
+      "to": [
+        {
+          "key_code": "f15"
+        }
+      ],
+      "type": "basic",
+      "conditions": [
+        {
+          "type": "device_unless",
+          "identifiers": [
+            {
+              "is_built_in_keyboard": true
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "description": "Insert -> F16",
+      "from": {
+        "key_code": "insert"
+      },
+      "to": [
+        {
+          "key_code": "f16"
+        }
+      ],
+      "type": "basic",
+      "conditions": [
+        {
+          "type": "device_unless",
+          "identifiers": [
+            {
+              "is_built_in_keyboard": true
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "description": "F5 (bare) -> disabled (vk_none). Fn+F5 still passes through as a literal function key.",
+      "from": {
+        "key_code": "f5"
+      },
+      "to": [
+        {
+          "key_code": "vk_none"
+        }
+      ],
+      "type": "basic",
+      "conditions": [
+        {
+          "type": "device_unless",
+          "identifiers": [
+            {
+              "is_built_in_keyboard": true
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "description": "F6 (bare) -> disabled (vk_none). Fn+F6 still passes through as a literal function key.",
+      "from": {
+        "key_code": "f6"
+      },
+      "to": [
+        {
+          "key_code": "vk_none"
+        }
+      ],
+      "type": "basic",
+      "conditions": [
+        {
+          "type": "device_unless",
+          "identifiers": [
+            {
+              "is_built_in_keyboard": true
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "description": "F7 (bare) -> disabled (vk_none). Fn+F7 still passes through as a literal function key.",
+      "from": {
+        "key_code": "f7"
+      },
+      "to": [
+        {
+          "key_code": "vk_none"
+        }
+      ],
+      "type": "basic",
+      "conditions": [
+        {
+          "type": "device_unless",
+          "identifiers": [
+            {
+              "is_built_in_keyboard": true
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "description": "F8 (bare) -> disabled (vk_none). Fn+F8 still passes through as a literal function key.",
+      "from": {
+        "key_code": "f8"
+      },
+      "to": [
+        {
+          "key_code": "vk_none"
+        }
+      ],
+      "type": "basic",
+      "conditions": [
+        {
+          "type": "device_unless",
+          "identifiers": [
+            {
+              "is_built_in_keyboard": true
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "description": "F12 (bare) -> disabled (vk_none). Fn+F12 still passes through as a literal function key.",
+      "from": {
+        "key_code": "f12"
+      },
+      "to": [
+        {
+          "key_code": "vk_none"
+        }
+      ],
+      "type": "basic",
+      "conditions": [
+        {
+          "type": "device_unless",
+          "identifiers": [
+            {
+              "is_built_in_keyboard": true
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "description": "Num Lock -> Start Screensaver (moved off Fn+Esc, which toggles FN lock)",
+      "from": {
+        "key_code": "keypad_num_lock"
+      },
+      "to": [
+        {
+          "shell_command": "open -a ScreenSaverEngine"
+        }
+      ],
+      "type": "basic",
+      "conditions": [
+        {
+          "type": "device_unless",
+          "identifiers": [
+            {
+              "is_built_in_keyboard": true
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "description": "Swap left_command -> left_option",
+      "conditions": [
+        {
+          "type": "device_unless",
+          "identifiers": [
+            {
+              "is_built_in_keyboard": true
+            }
+          ]
+        }
+      ],
+      "from": {
+        "key_code": "left_command",
+        "modifiers": {
+          "optional": [
+            "any"
+          ]
+        }
+      },
+      "to": [
+        {
+          "key_code": "left_option"
+        }
+      ],
+      "type": "basic"
+    },
+    {
+      "description": "Swap left_option -> left_command",
+      "conditions": [
+        {
+          "type": "device_unless",
+          "identifiers": [
+            {
+              "is_built_in_keyboard": true
+            }
+          ]
+        }
+      ],
+      "from": {
+        "key_code": "left_option",
+        "modifiers": {
+          "optional": [
+            "any"
+          ]
+        }
+      },
+      "to": [
+        {
+          "key_code": "left_command"
+        }
+      ],
+      "type": "basic"
+    },
+    {
+      "description": "Swap right_option -> right_command",
+      "conditions": [
+        {
+          "type": "device_unless",
+          "identifiers": [
+            {
+              "is_built_in_keyboard": true
+            }
+          ]
+        }
+      ],
+      "from": {
+        "key_code": "right_option",
+        "modifiers": {
+          "optional": [
+            "any"
+          ]
+        }
+      },
+      "to": [
+        {
+          "key_code": "right_command"
+        }
+      ],
+      "type": "basic"
+    },
+    {
+      "description": "Swap right_control -> right_option",
+      "conditions": [
+        {
+          "type": "device_unless",
+          "identifiers": [
+            {
+              "is_built_in_keyboard": true
+            }
+          ]
+        }
+      ],
+      "from": {
+        "key_code": "right_control",
+        "modifiers": {
+          "optional": [
+            "any"
+          ]
+        }
+      },
+      "to": [
+        {
+          "key_code": "right_option"
+        }
+      ],
+      "type": "basic"
+    }
+  ]
+}
