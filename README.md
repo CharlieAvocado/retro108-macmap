@@ -27,7 +27,7 @@ You must have already installed Karabiner-Elements and Karabiner-EventViewer. Th
 
 The board's `Fn` reaches macOS as the Globe key. The default Globe action ("Show Emoji & Symbols") fires before Karabiner sees it, so `Fn`+`Home` opens the emoji picker instead of running its rule. Note this setting may be global rather than per-keyboard depending on your macOS version — if your laptop's Globe key stops opening the emoji picker, that is why.
 
-**`System Settings → Keyboard → Keyboard Shortcuts → Function Keys → leave OFF`**
+**`System Settings → Keyboard → Keyboard Shortcuts → Function Keys` → leave OFF**
 
 This rule set disables `F5`–`F8` and `F12` inside Karabiner, which means macOS never sees those keys and cannot impose its own meanings on them. Turning "Use F1, F2, etc. keys as standard function keys" ON is therefore unnecessary — and on macOS versions where the panel has no per-device dropdown it is global, which strips the media and brightness functions from your laptop's own F-row.
 
