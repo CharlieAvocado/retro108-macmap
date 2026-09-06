@@ -13,7 +13,7 @@ There are two files:
 | File | What |
 |---|---|
 | `retro108-macmap.json` | The rule set. A bare `{description, manipulators}` object |
-| `NOTES.md` | The lab notebook — why each rule is shaped the way it is, the diagnostic traps, and the things that turned out to be dead ends |
+| `NOTES.md` | The lab notebook — why each rule is shaped the way it is, the Karabiner behaviour that traps people, how to diagnose a rule that will not fire, and what the board's firmware can do on its own. Read it before changing anything |
 
 ---
 
