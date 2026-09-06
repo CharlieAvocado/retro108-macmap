@@ -247,8 +247,12 @@ verified, and left in place because removing a working key to prove a point is a
 
 ## Credits and licence
 
-Forked from an existing community gist for this keyboard and then substantially rewritten.
-Changes from the original: the `Cmd+Ctrl+Shift+5` screen-recording mapping was replaced
+Based on [breadbored](https://gist.github.com/breadbored)'s gist, [*Tutorial: Remapping the
+8BitDo 108-key Keyboard for MacOS and Karabiner*](https://gist.github.com/breadbored/6dd26c7e2a201c8fae2282d82c5d1ac4),
+which got the hard part right — working out that this board emits Xbox Game Bar chords
+rather than plain function keys, which is the insight the whole F-row depends on.
+
+This version has since been substantially rewritten. Changes from the original: the `Cmd+Ctrl+Shift+5` screen-recording mapping was replaced
 (that is not a real macOS shortcut and the key silently did nothing); `Fn+End` was missing
 its `fn` modifier; the bare `Home`/`End` rules were removed so those keys behave natively;
 the lock key was rebuilt as a `simultaneous` rule because no modifier-based rule can work
