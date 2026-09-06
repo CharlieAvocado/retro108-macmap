@@ -12,14 +12,14 @@ broken rule and was not.
 
 ## Hard-won facts
 
-**Adding a rule does not replace the existing one.** Entries stack, and the older entry
-matches first, so a stale copy silently wins over the one you just added. Always remove
-the old entry before adding a new one.
+**Karabiner runs the copy you pasted in, not the file you pasted it from.** To change the
+rules, update that entry — use the edit button on it, or delete it and add a fresh one.
+Nothing you do to the JSON file afterwards reaches Karabiner on its own.
 
-The symptom is confusing, which is why it wastes so much time: some rules work and others
-do not, because the stale entry contains an older version of the same rule set — different
-ordering, missing modifiers, rules absent entirely. It looks like several unrelated bugs
-rather than one wrong copy.
+The symptom when this is missed is confusing enough to waste hours: some rules work and
+others do not, because what is loaded is an older version of the same set — different
+ordering, missing modifiers, rules absent entirely. It reads as several unrelated bugs
+rather than one out-of-date copy.
 
 **Verify what is actually loaded** before theorising about a rule that will not fire:
 

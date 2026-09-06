@@ -53,10 +53,11 @@ it.
 
 1. Open `retro108-macmap.json` and copy the whole file.
 2. `Karabiner-Elements → Complex Modifications`.
-3. **Remove any existing entry for this keyboard first.** Adding does not replace, so
-   entries stack and the older one matches first — a stale copy will quietly win over the
-   one you just added.
-4. **Add your own rule** → paste → Add.
+3. **Add your own rule** → paste → Add.
+
+**To update it later**, edit that entry in place with its edit button, or delete it and
+add a fresh one. Karabiner runs the copy you pasted in, so changing the JSON elsewhere
+does not reach it.
 
 If a rule does not seem to fire, check what Karabiner actually has loaded:
 
@@ -194,7 +195,7 @@ To give one of them a job, replace its `"to"` block. Three shapes cover almost e
 ```
 
 Then re-import: remove the existing entry in Karabiner and paste the updated rule. Editing
-pasting again does nothing unless you remove the old entry first.
+you have to update the entry in Karabiner itself — edit it, or delete it and re-add.
 
 Leave the `"from"` block alone. It deliberately carries no `modifiers` key, which means it
 matches the **bare** key only, so `Fn`+that key still passes through as a literal function
