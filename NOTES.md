@@ -14,11 +14,12 @@ broken rule and was not.
 
 **Adding a rule does not replace the existing one.** Entries stack, and the older entry
 matches first, so a stale copy silently wins over the one you just added. Always remove
-the old entry before adding a new one. This was the single most time-consuming mistake in
-the project: the running configuration had 15 manipulators with the original gist's rules
-— no modifier swaps, plain `Home`/`End` ordered above their `Fn+` variants, and `Fn+End`
-missing its `fn` modifier — while every diagnosis was being made against a newer version
-that had never been loaded.
+the old entry before adding a new one.
+
+The symptom is confusing, which is why it wastes so much time: some rules work and others
+do not, because the stale entry contains an older version of the same rule set — different
+ordering, missing modifiers, rules absent entirely. It looks like several unrelated bugs
+rather than one wrong copy.
 
 **Verify what is actually loaded** before theorising about a rule that will not fire:
 
