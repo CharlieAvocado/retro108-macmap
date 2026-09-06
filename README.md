@@ -1,4 +1,4 @@
-# 8BitDo Retro 108 on macOS
+# 8BitDo Retro108 MacMap with Karabiner
 
 A [Karabiner-Elements](https://karabiner-elements.pqrs.org/) rule set that makes the
 8BitDo Retro 108 mechanical keyboard behave properly on a Mac — Windows-layout modifiers
@@ -12,7 +12,7 @@ There are two files:
 
 | File | What |
 |---|---|
-| `8bitdo-retro-108.json` | The rule set. A bare `{description, manipulators}` object |
+| `retro108-macmap.json` | The rule set. A bare `{description, manipulators}` object |
 | `NOTES.md` | The lab notebook — why each rule is shaped the way it is, the diagnostic traps, and the things that turned out to be dead ends |
 
 ---
@@ -51,7 +51,7 @@ it.
 
 ### 3. Import the rules
 
-1. Open `8bitdo-retro-108.json` and copy the whole file.
+1. Open `retro108-macmap.json` and copy the whole file.
 2. `Karabiner-Elements → Complex Modifications`.
 3. **Remove any existing entry for this keyboard first.** "Add rule" takes a snapshot and
    does not replace, so duplicates stack and the older copy wins — this is the single

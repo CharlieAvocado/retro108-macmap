@@ -1,4 +1,4 @@
-# 8BitDo Retro 108 on macOS — notes
+# 8BitDo Retro108 MacMap — notes
 
 The reasoning behind the rule set in this repo: why each rule is shaped the way it is,
 which diagnostic methods actually work, and the dead ends. Setup instructions are in

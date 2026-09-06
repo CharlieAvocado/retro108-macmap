@@ -1,5 +1,5 @@
 {
-  "description": "8bitdo windows commands remap",
+  "description": "8BitDo Retro108 MacMap with Karabiner",
   "manipulators": [
     {
       "description": "F1 (sends Win+Alt+PrtScrn) -> Screenshot Area  [needs FN lock engaged]",
