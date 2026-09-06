@@ -157,7 +157,14 @@ Leave the `"from"` block alone. It deliberately carries no `modifiers` key, whic
 
 **Other free slots:** `F4` sends `F13`, `Insert` sends `F16`, and the onboard A/B Super Buttons can carry any chord you record onto them.
 
-Right `Shift` is worth a look too. Plenty of people shift only with the left hand and never touch it, which makes it a full-size key doing nothing. It takes a rule like any other — `"from": { "key_code": "right_shift" }` — though remap it only if you are certain you do not use it, and remember the rule set already moves right `Alt` and right `Ctrl`, so the right-hand modifier row is not where muscle memory expects it.
+Right `Shift` is worth a look too. Plenty of people shift only with the left hand and never touch it, which makes it a full-size key doing nothing. It takes a rule like any other — `"from": { "key_code": "right_shift" }` — though remember the rule set already moves right `Alt` and right `Ctrl`, so the right-hand modifier row is not where muscle memory expects it.
+
+**Try it yourself before you remap it.** Touch-typing form puts `Shift` under the hand opposite the character, so right `Shift` is the one for the left half of the board. Type these and watch what your right pinky actually does:
+
+- Capitals on left-hand letters — `Zebra`, `Quartz`, `Extra`, `Vexed`, `Garden`, `Basket`, `Wafer`, `Dagger`
+- Shifted left-hand symbols — `!` `@` `#` `$` `%` and `~`
+
+If your left hand handled all of that alone, right `Shift` never fired and the key is genuinely free. Many people find their right pinky stays parked on `Enter`, `\` and `'` and never travels down to it.
 
 ---
 
