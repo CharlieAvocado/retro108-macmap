@@ -12,15 +12,15 @@ broken rule and was not.
 
 ## Hard-won facts
 
-**Karabiner's "Add rule" takes a SNAPSHOT.** Importing copies the manipulators into
-`~/.config/karabiner/karabiner.json`. Later edits to the source file change nothing
-about what is running — there is no live link. On 2026-09-05 this cost hours: the
-loaded config was a pre-edit snapshot with only 15 manipulators (no swaps at all, plain
-`Home`/`End` above their `Fn+` variants, and `Fn+End` missing its `fn` modifier
-entirely), while every diagnosis was being made against the edited source file.
+**Adding a rule does not replace the existing one.** Entries stack, and the older entry
+matches first, so a stale copy silently wins over the one you just added. Always remove
+the old entry before adding a new one. This was the single most time-consuming mistake in
+the project: the running configuration had 15 manipulators with the original gist's rules
+— no modifier swaps, plain `Home`/`End` ordered above their `Fn+` variants, and `Fn+End`
+missing its `fn` modifier — while every diagnosis was being made against a newer version
+that had never been loaded.
 
-**Always verify what is actually loaded** before theorising about a rule that will not
-fire:
+**Verify what is actually loaded** before theorising about a rule that will not fire:
 
 ```bash
 python3 -c "

@@ -53,12 +53,12 @@ it.
 
 1. Open `retro108-macmap.json` and copy the whole file.
 2. `Karabiner-Elements → Complex Modifications`.
-3. **Remove any existing entry for this keyboard first.** "Add rule" takes a snapshot and
-   does not replace, so duplicates stack and the older copy wins — this is the single
-   most time-consuming trap in the whole project. See [NOTES.md](NOTES.md).
+3. **Remove any existing entry for this keyboard first.** Adding does not replace, so
+   entries stack and the older one matches first — a stale copy will quietly win over the
+   one you just added.
 4. **Add your own rule** → paste → Add.
 
-To verify what is actually loaded at any point:
+If a rule does not seem to fire, check what Karabiner actually has loaded:
 
 ```bash
 python3 -c "
@@ -194,7 +194,7 @@ To give one of them a job, replace its `"to"` block. Three shapes cover almost e
 ```
 
 Then re-import: remove the existing entry in Karabiner and paste the updated rule. Editing
-the source file alone does nothing — see the snapshot trap in [NOTES.md](NOTES.md).
+pasting again does nothing unless you remove the old entry first.
 
 Leave the `"from"` block alone. It deliberately carries no `modifiers` key, which means it
 matches the **bare** key only, so `Fn`+that key still passes through as a literal function
