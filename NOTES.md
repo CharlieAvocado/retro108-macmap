@@ -237,10 +237,51 @@ Across four presses of one button the two shifts arrived `left`→`right` twice 
 flags rather than as a sequence — but any `simultaneous` rule involving a Super Button must
 set `key_down_order: insensitive`, exactly as the padlock rule does.
 
-**Still open:** whether two Super Buttons can be chorded with each other. That needs a second
-button programmed to a different combination, then a capture showing whether the two
-combinations overlap in time or run one after the other. If the firmware finishes one before
-starting the next, no `simultaneous` threshold can catch them.
+**Two Super Buttons can be chorded, and there is room to spare.** With one button recorded
+to `left_shift`+`right_shift`+`F9` and a second to `left_shift`+`right_shift`+`F10`, pressing
+both produced `f10` down, then `f9` down **18 ms later while `f10` was still held**, both keys
+held together for 236 ms, and both released in the same millisecond. Overlapping, not
+sequential — so a `simultaneous` rule catches them.
+
+The shared modifiers are emitted once rather than twice, which makes the rule tidier than
+expected: the two shifts go in `mandatory`, and only the two terminal keys go in
+`simultaneous`.
+
+```json
+{
+  "description": "Super Buttons A + B -> Mission Control",
+  "from": {
+    "simultaneous": [{ "key_code": "f9" }, { "key_code": "f10" }],
+    "simultaneous_options": {
+      "key_down_order": "insensitive",
+      "key_up_order": "insensitive"
+    },
+    "modifiers": { "mandatory": ["left_shift", "right_shift"] }
+  },
+  "parameters": { "basic.simultaneous_threshold_milliseconds": 50 },
+  "to": [{ "key_code": "mission_control" }],
+  "type": "basic",
+  "conditions": [
+    {
+      "type": "device_unless",
+      "identifiers": [{ "is_built_in_keyboard": true }]
+    }
+  ]
+}
+```
+
+**Use 50 ms, not the padlock rule's 20.** An 18 ms gap clears a 20 ms threshold by two
+milliseconds, which is not a margin — one slower press and the chord silently stops firing.
+The padlock key can afford 20 ms because both of its keys come from a single physical
+switch; two Super Buttons are two switches and two reports.
+
+`key_down_order` must be `insensitive` because the terminal keys arrive in whichever order
+the buttons were pressed, and `key_up_order` likewise, since both released in the same
+millisecond.
+
+With that settled, every question about Super Buttons is answered: they are catchable, they
+accept modifiers on top of their recording, they sustain a hold, and they chord with each
+other. The only thing they cannot do is emit a keycode the keyboard itself could not send.
 
 ### **Do not use Fast Key Swap.** 
 
