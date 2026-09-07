@@ -1,0 +1,159 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Retro 108 MacMap</title>
+<meta name="description" content="Karabiner-Elements rules that make the 8BitDo Retro 108 mechanical keyboard work properly on macOS.">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
+<style>
+  :root{
+    --shell:#EFEAE0; --panel:#F8F5EE; --raise:#FFFFFF;
+    --ink:#1A1815; --ink-2:#5B554C; --ink-3:#8B8479;
+    --cap:#DDD5C6; --line:#D2CABA;
+    --accent:#AE382C; --accent-ink:#FFFFFF;
+    --radius:3px;
+    color-scheme:light dark;
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --shell:#171612; --panel:#1F1D19; --raise:#282520;
+      --ink:#EEE9DE; --ink-2:#A8A195; --ink-3:#7B7568;
+      --cap:#3A3730; --line:#35322B;
+      --accent:#DC5A4C; --accent-ink:#17150F;
+    }
+  }
+  :root[data-theme="dark"]{
+    --shell:#171612; --panel:#1F1D19; --raise:#282520;
+    --ink:#EEE9DE; --ink-2:#A8A195; --ink-3:#7B7568;
+    --cap:#3A3730; --line:#35322B;
+    --accent:#DC5A4C; --accent-ink:#17150F;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0; background:var(--shell); color:var(--ink);
+    font-family:'Archivo',system-ui,-apple-system,'Helvetica Neue',sans-serif;
+    font-size:16px; line-height:1.6; -webkit-font-smoothing:antialiased;
+  }
+  code,.mono{font-family:'IBM Plex Mono',ui-monospace,Menlo,monospace;}
+  .wrap{max-width:780px;margin:0 auto;padding:44px 22px 72px;}
+  .eyebrow{
+    font-family:'IBM Plex Mono',monospace;font-size:11px;font-weight:600;
+    letter-spacing:.18em;text-transform:uppercase;color:var(--accent);margin-bottom:6px;
+  }
+  h1{font-size:clamp(30px,6vw,46px);font-weight:700;letter-spacing:-.025em;margin:0 0 12px;line-height:1.03;}
+  .lede{font-size:17px;color:var(--ink-2);margin:0 0 8px;max-width:60ch;}
+  .rule-line{border:0;border-top:2px solid var(--ink);margin:26px 0 30px;}
+  h2{font-size:12px;font-weight:600;letter-spacing:.15em;text-transform:uppercase;color:var(--ink-3);margin:36px 0 14px;}
+  .cta{
+    display:inline-block;background:var(--accent);color:var(--accent-ink);
+    text-decoration:none;font-weight:600;font-size:16px;
+    padding:13px 22px;border-radius:var(--radius);margin:6px 0 4px;
+  }
+  .cta:hover{filter:brightness(1.08);}
+  .cta-note{font-size:13.5px;color:var(--ink-3);margin:8px 0 0;max-width:58ch;}
+  table{width:100%;border-collapse:collapse;font-size:15px;}
+  th,td{text-align:left;padding:9px 10px;border-bottom:1px solid var(--line);vertical-align:top;}
+  th{font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-3);font-weight:600;}
+  td:first-child{white-space:nowrap;font-weight:500;}
+  tbody tr:last-child td{border-bottom:0;}
+  ol{padding-left:22px;margin:0;}
+  ol li{margin-bottom:9px;color:var(--ink-2);}
+  ol li strong{color:var(--ink);}
+  .files{list-style:none;padding:0;margin:0;}
+  .files li{padding:10px 0;border-bottom:1px solid var(--line);font-size:15px;}
+  .files li:last-child{border-bottom:0;}
+  .files a{color:var(--accent);text-decoration:none;font-weight:600;}
+  .files a:hover{text-decoration:underline;}
+  .files span{display:block;color:var(--ink-2);font-size:14px;margin-top:2px;}
+  .callout{
+    background:var(--panel);border:1px solid var(--line);border-left:3px solid var(--cap);
+    border-radius:0 var(--radius) var(--radius) 0;padding:14px 16px;font-size:14.5px;color:var(--ink-2);
+  }
+  .callout strong{color:var(--ink);}
+  footer{margin-top:44px;padding-top:20px;border-top:1px solid var(--line);font-size:14px;color:var(--ink-3);}
+  footer a{color:var(--accent);}
+  footer .joke{font-style:italic;margin-top:14px;max-width:62ch;}
+  a:focus-visible{outline:2px solid var(--accent);outline-offset:2px;}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <p class="eyebrow">8BitDo Retro 108 &middot; Karabiner-Elements</p>
+  <h1>Retro 108 MacMap</h1>
+  <p class="lede">Twenty-two rules that make the Retro 108 behave like a Mac keyboard &mdash;
+  Windows-layout modifiers swapped, the Xbox Game Bar F-row turned into macOS screenshot and
+  recording shortcuts, the padlock key wired to Lock Screen, and the keys macOS ignores given
+  jobs.</p>
+  <hr class="rule-line">
+  <a class="cta" href="builder.html">Open the rule picker</a>
+  <p class="cta-note">Every rule with a switch on it. Turn off what you do not want, change
+  the ones whose output is a matter of taste, and give any of those a second action on hold.
+  Runs entirely in your browser.</p>
+  <h2>What the rule set covers</h2>
+  <table>
+    <thead><tr><th>Group</th><th>Rules</th><th>What it does</th></tr></thead>
+    <tbody>
+      <tr><td>Screenshots</td><td>5</td><td>The Game Bar F-row, rebuilt as macOS capture shortcuts</td></tr>
+      <tr><td>Padlock key</td><td>1</td><td>Lock Screen, via a <code>simultaneous</code> rule</td></tr>
+      <tr><td>Navigation</td><td>3</td><td>Terminal-compatible line movement and forward delete</td></tr>
+      <tr><td>Dead keys</td><td>3</td><td>Scroll Lock, Pause and Insert sent as <code>F14</code>&ndash;<code>F16</code></td></tr>
+      <tr><td>Silenced</td><td>5</td><td><code>F5</code>&ndash;<code>F8</code> and <code>F12</code> disabled so macOS cannot claim them</td></tr>
+      <tr><td>Num Lock</td><td>1</td><td>Starts the screensaver</td></tr>
+      <tr><td>Modifier swaps</td><td>4</td><td>Windows layout to Mac layout</td></tr>
+    </tbody>
+  </table>
+  <p class="cta-note">Every rule carries <code>device_unless is_built_in_keyboard</code>, so a
+  laptop keyboard is left alone.</p>
+  <h2>Three things to get right first</h2>
+  <ol>
+    <li><strong>FN lock has to be engaged</strong> on the board. Four of the capture rules
+      depend on it, and without it the F-row sends media keys instead.</li>
+    <li><strong>Set the Globe key to do nothing</strong> in
+      <code>System Settings &rarr; Keyboard</code>. Its default action fires before Karabiner
+      sees the key.</li>
+    <li><strong>Leave "Use F1, F2, etc. as standard function keys" OFF.</strong> This rule set
+      disables those keys inside Karabiner, so macOS never sees them anyway.</li>
+  </ol>
+  <p class="cta-note">Neither of those is the Modifier Keys panel. The modifier swaps live
+  entirely in the JSON.</p>
+  <h2>The files</h2>
+  <ul class="files">
+    <li><a href="builder.html">builder.html</a>
+      <span>All 22 rules with a switch on each, assembling the file as you go.</span></li>
+    <li><a href="https://github.com/CharlieAvocado/retro108-macmap/blob/main/README.md">README</a>
+      <span>Setup and the keymap.</span></li>
+    <li><a href="https://github.com/CharlieAvocado/retro108-macmap/blob/main/NOTES.md">NOTES</a>
+      <span>The lab notebook: the reasoning, the traps, and the deliberate non-fixes.</span></li>
+    <li><a href="https://github.com/CharlieAvocado/retro108-macmap/blob/main/INDEX.md">INDEX</a>
+      <span>A map of the whole repository.</span></li>
+    <li><a href="retro108-macmap.json">retro108-macmap.json</a>
+      <span>The rule set itself. Twenty-two manipulators.</span></li>
+    <li><a href="Retro-108-Mechanical-Keyboard.pdf">Retro-108-Mechanical-Keyboard.pdf</a>
+      <span>8BitDo's booklet, for the layout and the <code>FN</code> combinations.</span></li>
+  </ul>
+  <h2>The part most people miss</h2>
+  <div class="callout">
+    <p style="margin:0 0 10px;"><strong>The four 3.5mm jacks on the back are not audio
+    jacks.</strong> They take external Super Buttons, and combined with the pair on the board
+    that is ten programmable buttons &mdash; on top of the keys this rule set already repairs.</p>
+    <p style="margin:0;"><strong>Reach them with the chord trick.</strong> Fast Key Mapping
+    records physical keypresses only, so record an otherwise-unused combination onto a Super
+    Button, then catch that combination in a rule. The button will then trigger anything a
+    manipulator can express, including a <code>shell_command</code>. <code>NOTES.md</code> has
+    the detail, including why Fast Key <em>Swap</em> must be left alone.</p>
+  </div>
+  <footer>
+    <a href="https://github.com/CharlieAvocado/retro108-macmap">Source on GitHub</a> &middot;
+    MIT licensed &middot; a sibling of
+    <a href="https://charlieavocado.github.io/retro-r8-macmap/">retro-r8-macmap</a>, the same
+    treatment for the Retro R8 Mouse.
+    <p class="joke">8BitDo: you are welcome to send keycaps, or the Forest board, in
+    recognition of this solid to the community. Reverse-engineering an Xbox Game Bar F-row
+    into macOS screenshot shortcuts, and working out that the padlock key cannot be caught by
+    any modifier rule at all, went some distance past what documenting a keyboard ought to
+    require. It was a good time regardless.</p>
+  </footer>
+</div>
+</body>
+</html>
