@@ -198,6 +198,17 @@ Battery 2000mAh, ~200h. Auto-shutdown after 15 min idle (not while wired).
 
 ---
 
+### Other colourways
+
+The board ships in more than one colourway. One variant is reported to carry graphics on the
+keycaps with additional legends, apparently Japanese, and to come without the A/B Super
+Button module. *Unverified* — reported rather than examined.
+
+Nothing in this rule set depends on it either way. **A keycap legend does not change what a
+key sends**, so a differently printed board produces identical key codes and every rule here
+applies unchanged. The only difference that would matter is a missing physical key, and the
+`README` explains how to drop the rules for a key you do not have.
+
 ## Still open (as configured here)
 
 - `Fn`+number and `Fn`+letter combinations were never swept. Likely empty — the board has a dedicated Pair button, so Bluetooth slots are probably not on the number row. Worth a look only if you need more free chords to map.

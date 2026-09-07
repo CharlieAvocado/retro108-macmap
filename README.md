@@ -204,3 +204,11 @@ Based on [breadbored](https://gist.github.com/breadbored)'s gist, [*Tutorial: Re
 This version has since been substantially rewritten. Changes from the original: the `Cmd+Ctrl+Shift+5` screen-recording mapping was replaced (not a real macOS shortcut with `Ctrl` so the key silently did nothing); `Fn+End` was missing its `fn` modifier; the bare `Home`/`End` rules were removed so those keys behave natively; the lock key was rebuilt as a `simultaneous` rule because no modifier-based rule can work for it; `F5`–`F8` and `F12` were disabled; the screensaver was moved off `Fn`+`Esc`, as that's how Function lock is turned on and off; and every manipulator was scoped away from the built-in keyboard. More rules were added as well.
 
 MIT licensed — see `LICENSE`.
+
+---
+
+*8BitDo: you are welcome to send keycaps, or the Forest board, in recognition of this solid
+to the community. Reverse-engineering an Xbox Game Bar F-row into macOS screenshot
+shortcuts, and working out that the padlock key cannot be caught by any modifier rule at
+all, went some distance past what documenting a keyboard ought to require. It was a good
+time regardless.*

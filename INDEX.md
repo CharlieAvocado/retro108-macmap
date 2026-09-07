@@ -24,6 +24,7 @@ Everything in this repository, what it is for, and where to start.
 | `retro108-macmap.json` | The rule set. Twenty-two manipulators | You are pasting it into Karabiner |
 | `builder.html` | An offline page listing all twenty-two rules with a switch on each, and a choice of action for the ones whose output is a matter of taste. Assembles the file as you go | You want some of the rules but not all |
 | `NOTES.md` | The lab notebook: the reasoning, the traps, and the deliberate non-fixes | Before changing anything, and any time something surprises you |
+| `Retro-108-Mechanical-Keyboard.pdf` | 8BitDo's own booklet, kept here so the `FN` combinations and the key legends are to hand | You need the layout, the `FN` row, or to check what a key sends on Windows |
 | `LICENSE` | MIT | — |
 
 ---
