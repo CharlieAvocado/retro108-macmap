@@ -151,7 +151,10 @@ The four **3.5mm jacks** on the back of a 108 model are labeled A, B, X, and Y. 
 The manual says "Interfaces for 8BitDo Super Buttons are for 8BitDo Keyboard Extensions only." That means these can be used for *additional*, external Super Buttons. They are set in the same manner as the keyboard version.
 Note: The 108 comes with one set of external Super Buttons. Despite also being labeled **B** and **A**, they will be recognized as different Super Buttons from the keyboard.
 
-**How many that comes to is unresolved.** Two on the board plus four jacks is six. Ten only follows if each jack drives a two-button unit — four jacks at two buttons each, plus the on-board pair. The manual's diagram pages are vector art with no text layer, so this could not be settled from the PDF. Treat the count as six to ten pending a look at the hardware; every figure below scales with it. Either way it is in addition to the handful of unused keyboard keys that can be customized.
+**Six to ten, depending on what you plug in.** Super Buttons are sold as single-button and
+two-button units, so four jacks carry between four and eight external buttons. With the
+on-board pair that is six at minimum and **ten at maximum**. Either way it is in addition to
+the handful of unused keyboard keys that can be customized.
 
 ### **To reach A/B from Karabiner**
 
@@ -171,20 +174,33 @@ order-dependent against the swap manipulators: placed above them it sees pre-swa
 placed below them post-swap. That is a genuinely confusing bug to chase.
 
 The four physical modifiers this rule set never touches are `left_shift`, `right_shift`,
-`left_control` and `right_command`. So:
+`left_control` and `right_command`. Build the recording out of those:
 
-| Recording | Modifiers spent | Free of 8 | Verdict |
-|---|---|---|---|
-| Two non-modifier keys, e.g. `F9`+`F10` | 0 | 8 | Best case, and *unverified* — depends on the firmware emitting both within a `simultaneous` window |
-| `left_shift`+`right_shift`+`F9` | 2 | 6 | **Best safe recording.** Unswapped, unclaimed by macOS, never typed by accident |
-| `Ctrl`+`Alt`+`Shift`+`F9` | 3 | 5 | Works, but spends a swapped modifier and leaves less headroom |
+| Recording | Verdict |
+|---|---|
+| `left_shift`+`right_shift`+`F9` | **Recommended.** Nothing in this rule set swaps either Shift, macOS claims neither, and nobody presses both at once by accident |
+| `Ctrl`+`Alt`+`Shift`+`F9` | Works, but `Alt` is a swap source, so the catching rule's position relative to the swap manipulators changes what it sees |
 
-Two further points are *unverified* and both matter. Whether two Super Buttons can be
-chorded with each other depends on whether the firmware emits one combination fully before
-starting the next — if it does, no `simultaneous` threshold can catch them. And whether a
-Super Button can carry a hold at all depends on whether the firmware sustains the key-down
-or merely pulses it; the indicator blinking on each press hints at a pulse. If it pulses,
-`to_if_held_down` is unavailable on these buttons.
+**The reason is correctness, not headroom.** How many modifier states a recording leaves
+spare is irrelevant — nobody uses more than a handful, so trading thirty-two theoretical
+states for sixty-four buys nothing. What matters is that a chord built from a swapped
+modifier is order-dependent against the swap rules, which is a bug that appears to come and
+go. Pick unswapped modifiers and the question never arises.
+
+**The whole approach is unverified, and one capture settles it.** The `★` key programs a
+Super Button — press `★`, type the combination, press the button — so `★` is not involved in
+firing it afterwards. The premise is that a programmed Super Button then emits its
+combination like any keyboard would, and that Karabiner sees it. That is what the method
+above assumes and it has not been confirmed on this hardware. Record a combination onto one
+button and watch `Karabiner-EventViewer`: if the keystrokes appear, everything here follows,
+and if nothing appears, none of it does.
+
+Two narrower points are also unverified. Whether two Super Buttons can be chorded with each
+other depends on whether the firmware emits one combination fully before starting the next —
+if it does, no `simultaneous` threshold can catch them. And whether a Super Button can carry
+a hold depends on whether the firmware sustains the key-down or merely pulses it; the
+indicator blinking on each press hints at a pulse, which would put `to_if_held_down` out of
+reach on these buttons.
 
 ### **Do not use Fast Key Swap.** 
 
