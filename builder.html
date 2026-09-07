@@ -384,26 +384,43 @@
     // top strip: mode switch, volume knob, three round buttons, indicators
     svg += '<rect class="strip" x="-3" y="-39" width="581" height="30" rx="5"/>';
 
-    // Two dials, mode and volume, each with an index mark at twelve o'clock.
-    [10, 32].forEach(function(cx){
-      svg += '<circle class="knob" cx="'+cx+'" cy="-24" r="10"/>';
-      svg += '<line class="mark" x1="'+cx+'" y1="-24" x2="'+cx+'" y2="-34"/>';
+    // Everything on the strip is spaced by one constant, so the dials and the
+    // round buttons sit at the same rhythm. cy is the strip's centre line.
+    var CY = -24, PITCH = 6, DIAL_R = 10, BTN_R = 8;
+
+    var dials = [], bx = 0;
+    for (var d = 0; d < 2; d++){ dials.push(bx + DIAL_R); bx += DIAL_R*2 + PITCH; }
+    var btns = [];
+    for (var b = 0; b < 3; b++){ btns.push(bx + BTN_R); bx += BTN_R*2 + PITCH; }
+
+    // Mode and volume, each with an index mark at twelve o'clock.
+    dials.forEach(function(cx){
+      svg += '<circle class="knob" cx="'+cx+'" cy="'+CY+'" r="'+DIAL_R+'"/>';
+      svg += '<line class="mark" x1="'+cx+'" y1="'+CY+'" x2="'+cx+'" y2="'+(CY - DIAL_R)+'"/>';
     });
 
     // Pair, fast key mapping, profile.
-    [54, 76, 98].forEach(function(cx){
-      svg += '<circle class="knob" cx="'+cx+'" cy="-24" r="8"/>';
+    btns.forEach(function(cx){
+      svg += '<circle class="knob" cx="'+cx+'" cy="'+CY+'" r="'+BTN_R+'"/>';
     });
-    // wifi, on the pair button
-    svg += '<circle class="icon" cx="54" cy="-20.6" r="1.1"/>';
-    svg += '<path class="icon-line" d="M 51.7,-22.6 A 3.1,3.1 0 0 1 56.3,-22.6"/>';
-    svg += '<path class="icon-line" d="M 50.1,-24.7 A 5.4,5.4 0 0 1 57.9,-24.7"/>';
-    // star, on the fast key mapping button
-    svg += '<path class="icon" d="M 76,-28.4 L 77.3,-25.6 L 80.2,-25.3 L 78,-23.4 L 78.7,-20.6 '+
-           'L 76,-22.1 L 73.3,-20.6 L 74,-23.4 L 71.8,-25.3 L 74.7,-25.6 Z"/>';
-    // heart, on the profile button
-    svg += '<path class="icon" d="M 98,-20.4 C 93.6,-23.7 95.5,-27.3 98,-25.2 '+
-           'C 100.5,-27.3 102.4,-23.7 98,-20.4 Z"/>';
+
+    function wifi(cx){
+      return '<circle class="icon" cx="'+cx+'" cy="'+(CY+3.4)+'" r="1.1"/>' +
+        '<path class="icon-line" d="M '+(cx-2.3)+','+(CY+1.4)+' A 3.1,3.1 0 0 1 '+(cx+2.3)+','+(CY+1.4)+'"/>' +
+        '<path class="icon-line" d="M '+(cx-3.9)+','+(CY-0.7)+' A 5.4,5.4 0 0 1 '+(cx+3.9)+','+(CY-0.7)+'"/>';
+    }
+    function star(cx){
+      var p = [[0,-4.4],[1.3,-1.6],[4.2,-1.3],[2,0.6],[2.7,3.4],[0,1.9],[-2.7,3.4],[-2,0.6],[-4.2,-1.3],[-1.3,-1.6]];
+      return '<path class="icon" d="M ' + p.map(function(q, i){
+        return (i ? "L " : "") + (cx+q[0]) + "," + (CY+q[1]);
+      }).join(" ") + ' Z"/>';
+    }
+    function heart(cx){
+      return '<path class="icon" d="M '+cx+','+(CY+3.6)+
+        ' C '+(cx-4.4)+','+(CY+0.3)+' '+(cx-2.5)+','+(CY-3.3)+' '+cx+','+(CY-1.2)+
+        ' C '+(cx+2.5)+','+(CY-3.3)+' '+(cx+4.4)+','+(CY+0.3)+' '+cx+','+(CY+3.6)+' Z"/>';
+    }
+    svg += wifi(btns[0]) + star(btns[1]) + heart(btns[2]);
 
     // Indicator dots, centred over FN, Mute and Calc.
     [0,1,2].forEach(function(n){
