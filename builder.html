@@ -1,0 +1,428 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+  :root{color-scheme:light dark;}
+  body{margin:0;font:14px system-ui,sans-serif;background:#faf9f7;}
+  img{max-width:100%;}
+  [hidden]{display:none!important;}
+</style>
+<title>Retro 108 Rule Picker</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
+<style>
+  :root{
+    --shell:#EFEAE0;
+    --panel:#F8F5EE;
+    --raise:#FFFFFF;
+    --ink:#1A1815;
+    --ink-2:#5B554C;
+    --ink-3:#8B8479;
+    --cap:#DDD5C6;
+    --line:#D2CABA;
+    --accent:#AE382C;
+    --accent-soft:#F1DBD7;
+    --accent-ink:#FFFFFF;
+    --code-bg:#232019;
+    --code-ink:#E9E3D5;
+    --ok:#4A7A46;
+    --radius:3px;
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --shell:#171612; --panel:#1F1D19; --raise:#282520;
+      --ink:#EEE9DE; --ink-2:#A8A195; --ink-3:#7B7568;
+      --cap:#3A3730; --line:#35322B;
+      --accent:#DC5A4C; --accent-soft:#3B211D; --accent-ink:#17150F;
+      --code-bg:#101009; --code-ink:#DDD7C7; --ok:#7FB07A;
+    }
+  }
+  :root[data-theme="dark"]{
+    --shell:#171612; --panel:#1F1D19; --raise:#282520;
+    --ink:#EEE9DE; --ink-2:#A8A195; --ink-3:#7B7568;
+    --cap:#3A3730; --line:#35322B;
+    --accent:#DC5A4C; --accent-soft:#3B211D; --accent-ink:#17150F;
+    --code-bg:#101009; --code-ink:#DDD7C7; --ok:#7FB07A;
+  }
+
+  *{box-sizing:border-box;}
+  body{
+    background:var(--shell);color:var(--ink);
+    font-family:'Archivo',system-ui,-apple-system,'Helvetica Neue',sans-serif;
+    font-size:15px;line-height:1.55;-webkit-font-smoothing:antialiased;
+  }
+  code,kbd,.mono{font-family:'IBM Plex Mono',ui-monospace,'SF Mono',Menlo,monospace;}
+  .wrap{max-width:1220px;margin:0 auto;padding:28px 22px 64px;}
+
+  header.top{
+    display:flex;flex-wrap:wrap;align-items:flex-end;gap:14px 24px;
+    padding-bottom:18px;margin-bottom:20px;border-bottom:2px solid var(--ink);
+  }
+  .brandmark{
+    font-family:'IBM Plex Mono',monospace;font-size:11px;font-weight:600;
+    letter-spacing:.16em;text-transform:uppercase;color:var(--accent);
+    display:block;margin-bottom:4px;
+  }
+  h1{font-size:clamp(26px,4.4vw,40px);font-weight:700;letter-spacing:-.02em;margin:0;line-height:1.05;}
+  .sub{color:var(--ink-2);max-width:62ch;margin:0 0 22px;font-size:14.5px;}
+  .themer{
+    margin-left:auto;font-family:'IBM Plex Mono',monospace;font-size:11px;
+    letter-spacing:.1em;text-transform:uppercase;background:none;color:var(--ink-2);
+    border:1px solid var(--line);border-radius:var(--radius);padding:7px 11px;cursor:pointer;
+  }
+  .themer:hover{color:var(--ink);border-color:var(--ink-3);}
+
+  .cols{display:grid;grid-template-columns:minmax(0,1.25fr) minmax(0,1fr);gap:32px;align-items:start;}
+  @media (max-width:940px){ .cols{grid-template-columns:1fr;} }
+
+  h2{font-size:12px;font-weight:600;letter-spacing:.15em;text-transform:uppercase;color:var(--ink-3);margin:0 0 12px;}
+
+  /* keymap */
+  .keymap{
+    background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);
+    padding:16px;margin-bottom:22px;overflow-x:auto;
+  }
+  .keymap .cap{fill:var(--cap);stroke:var(--line);stroke-width:1;}
+  .keymap .cap.on{fill:var(--accent);stroke:var(--accent);}
+  .keymap .lab{font-family:'IBM Plex Mono',monospace;font-size:8.5px;fill:var(--ink-2);}
+  .keymap .lab.on{fill:var(--accent-ink);font-weight:600;}
+  .keymap .zone{font-family:'IBM Plex Mono',monospace;font-size:8px;fill:var(--ink-3);letter-spacing:.1em;}
+  .capnote{font-size:12.5px;color:var(--ink-3);margin:10px 0 0;}
+
+  /* groups */
+  .group{margin-bottom:20px;}
+  .group-head{display:flex;align-items:baseline;gap:10px;margin-bottom:9px;}
+  .group-head h3{font-size:14.5px;font-weight:600;margin:0;}
+  .group-head .gtoggle{
+    margin-left:auto;font-family:'IBM Plex Mono',monospace;font-size:10.5px;
+    letter-spacing:.08em;text-transform:uppercase;background:none;color:var(--ink-3);
+    border:1px solid var(--line);border-radius:var(--radius);padding:3px 8px;cursor:pointer;
+  }
+  .group-head .gtoggle:hover{color:var(--accent);border-color:var(--accent);}
+  .gnote{font-size:12.5px;color:var(--ink-3);margin:0 0 9px;max-width:70ch;}
+
+  .rule{
+    background:var(--panel);border:1px solid var(--line);border-left:3px solid var(--cap);
+    border-radius:var(--radius);padding:10px 13px;margin-bottom:7px;
+    display:flex;gap:11px;align-items:flex-start;
+  }
+  .rule.on{border-left-color:var(--accent);}
+  .rule input[type=checkbox]{accent-color:var(--accent);width:16px;height:16px;margin-top:3px;flex:0 0 auto;}
+  .rule .body{flex:1;min-width:0;}
+  .rule .name{font-size:14px;font-weight:500;}
+  .rule .meta{font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--ink-3);margin-top:2px;}
+  .rule .warnflag{color:var(--accent);font-size:12px;margin-top:4px;}
+  .rule select{
+    margin-top:7px;font-family:'Archivo',sans-serif;font-size:13px;color:var(--ink);
+    background:var(--raise);border:1px solid var(--line);border-radius:var(--radius);
+    padding:5px 8px;max-width:100%;
+  }
+  select:focus-visible,button:focus-visible,input:focus-visible{outline:2px solid var(--accent);outline-offset:1px;}
+
+  .out{position:sticky;top:18px;}
+  .outhead{display:flex;align-items:center;gap:10px;margin-bottom:12px;}
+  .outhead h2{margin:0;}
+  .count{margin-left:auto;font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--ink-3);}
+  .copy{
+    background:var(--accent);color:var(--accent-ink);border:none;border-radius:var(--radius);
+    font-family:'Archivo',sans-serif;font-weight:600;font-size:13.5px;padding:9px 16px;cursor:pointer;
+  }
+  .copy:hover{filter:brightness(1.08);}
+  .copy.done{background:var(--ok);}
+  pre{
+    background:var(--code-bg);color:var(--code-ink);border-radius:var(--radius);margin:0;
+    padding:15px;overflow:auto;max-height:58vh;
+    font-family:'IBM Plex Mono',monospace;font-size:11.5px;line-height:1.5;
+  }
+  .note{font-size:12.5px;color:var(--ink-3);margin:12px 0 0;max-width:60ch;}
+  .warn{
+    border-left:3px solid var(--accent);background:var(--accent-soft);color:var(--ink);
+    padding:10px 13px;border-radius:0 var(--radius) var(--radius) 0;font-size:13px;margin-top:14px;
+  }
+  @media (prefers-reduced-motion:reduce){*{transition:none!important;}}
+</style>
+
+</head>
+<body>
+<div class="wrap">
+  <header class="top">
+    <div>
+      <span class="brandmark">8BitDo Retro 108 &middot; Karabiner</span>
+      <h1>Retro 108 Rule Picker</h1>
+    </div>
+    <button class="themer" id="themer" type="button">Theme</button>
+  </header>
+
+  <p class="sub">All twenty-two rules, switched on. Turn off anything you do not want and
+  change the ones whose output is a matter of taste. The file assembles below in the
+  original order, which matters — a broad rule above a narrow one hides it. Nothing leaves
+  this page.</p>
+
+  <div class="cols">
+    <div>
+      <div class="keymap">
+        <svg id="km" width="620" height="150" viewBox="0 0 620 150" role="img" aria-label="Which keys the enabled rules change"></svg>
+        <p class="capnote">Highlighted keys are the ones your current selection changes.</p>
+      </div>
+      <div id="groups"></div>
+    </div>
+
+    <div class="out">
+      <div class="outhead">
+        <h2>retro108-macmap.json</h2>
+        <span class="count" id="count"></span>
+        <button class="copy" id="copy" type="button">Copy</button>
+      </div>
+      <pre id="json"></pre>
+      <p class="note">Paste into <code>Karabiner-Elements &rarr; Complex Modifications &rarr;
+      Add your own rule</code>, clearing the default contents first. Every rule carries
+      <code>device_unless is_built_in_keyboard</code>, so a laptop keyboard is untouched.</p>
+      <div class="warn" id="warn" hidden></div>
+    </div>
+  </div>
+</div>
+
+<script>
+(function(){
+  "use strict";
+
+  var COND = [{type:"device_unless", identifiers:[{is_built_in_keyboard:true}]}];
+
+  var CHOICES = [
+    ["keep", "— as written —", null],
+    ["f13","Send F13",[{key_code:"f13"}]],
+    ["f14","Send F14",[{key_code:"f14"}]],
+    ["f15","Send F15",[{key_code:"f15"}]],
+    ["f16","Send F16",[{key_code:"f16"}]],
+    ["f17","Send F17",[{key_code:"f17"}]],
+    ["f18","Send F18",[{key_code:"f18"}]],
+    ["f19","Send F19",[{key_code:"f19"}]],
+    ["f20","Send F20",[{key_code:"f20"}]],
+    ["off","Disable the key",[{key_code:"vk_none"}]],
+    ["mc","Mission Control",[{key_code:"mission_control"}]],
+    ["lpad","Launchpad",[{key_code:"launchpad"}]],
+    ["spot","Spotlight",[{key_code:"spacebar",modifiers:["left_command"]}]],
+    ["lock","Lock screen",[{key_code:"q",modifiers:["left_control","left_command"]}]],
+    ["saver","Start screensaver",[{shell_command:"open -a ScreenSaverEngine"}]],
+    ["prevdesk","Previous desktop",[{key_code:"left_arrow",modifiers:["left_control"]}]],
+    ["nextdesk","Next desktop",[{key_code:"right_arrow",modifiers:["left_control"]}]],
+    ["shot4","Screenshot of an area",[{key_code:"4",modifiers:["left_command","left_shift"]}]],
+    ["mute","Mute",[{consumer_key_code:"mute"}]],
+    ["play","Play or pause",[{consumer_key_code:"play_or_pause"}]]
+  ];
+  var CHOICE = {};
+  CHOICES.forEach(function(c){ CHOICE[c[0]] = {label:c[1], to:c[2]}; });
+
+  // The twenty-two manipulators, verbatim from retro108-macmap.json.
+  var RULES = [
+    {g:"capture", k:["F1"], n:"F1 → screenshot an area", cust:false,
+     m:{description:"F1 (sends Win+Alt+PrtScrn) -> Screenshot Area  [needs FN lock engaged]",from:{key_code:"print_screen",modifiers:{mandatory:["left_command","left_option"]}},to:[{key_code:"4",modifiers:["left_command","left_shift"]}],type:"basic"}},
+    {g:"capture", k:["PrtSc"], n:"PrtScrn → screenshot the whole screen", cust:false,
+     m:{description:"PrtScrn -> Screenshot Entire Screen",from:{key_code:"print_screen"},to:[{key_code:"3",modifiers:["left_command","left_shift"]}],type:"basic"}},
+    {g:"capture", k:["F2"], n:"F2 → capture a region to the clipboard", cust:false,
+     m:{description:"F2 (sends Win+Alt+G) -> Capture Region to Clipboard  [needs FN lock engaged]",from:{key_code:"g",modifiers:{mandatory:["left_command","left_option"]}},to:[{key_code:"4",modifiers:["left_command","left_control","left_shift"]}],type:"basic"}},
+    {g:"capture", k:["F3"], n:"F3 → screenshot and recording toolbar", cust:false,
+     m:{description:"F3 (record-dot key, sends Win+Alt+R) -> Screenshot/Recording Toolbar  [needs FN lock engaged]",from:{key_code:"r",modifiers:{mandatory:["left_command","left_option"]}},to:[{key_code:"5",modifiers:["left_command","left_shift"]}],type:"basic"}},
+    {g:"capture", k:["F4"], n:"F4 → F13, for Discord and similar", cust:true,
+     m:{description:"F4 (sends Win+Alt+M) -> F13 for Discord and other software  [needs FN lock engaged]",from:{key_code:"m",modifiers:{mandatory:["left_command","left_option"]}},to:[{key_code:"f13"}],type:"basic"}},
+
+    {g:"padlock", k:["Lock"], n:"Padlock key → lock the screen", cust:true,
+     m:{description:"Padlock key (l + left_command within 20ms) -> Lock Screen",from:{simultaneous:[{key_code:"l"},{key_code:"left_command"}],simultaneous_options:{key_down_order:"insensitive",key_up_order:"insensitive"},modifiers:{optional:["any"]}},parameters:{"basic.simultaneous_threshold_milliseconds":20},to:[{key_code:"q",modifiers:["left_command","left_control"]}],type:"basic"}},
+
+    {g:"nav", k:["Home"], n:"Fn+Home → start of line", cust:false,
+     m:{description:"Fn+Home -> beginning of line (terminal compat)",from:{key_code:"home",modifiers:{mandatory:["fn"]}},to:[{key_code:"a",modifiers:["left_control"]}],type:"basic"}},
+    {g:"nav", k:["End"], n:"Fn+End → end of line", cust:false,
+     m:{description:"Fn+End -> end of line (terminal compat)",from:{key_code:"end",modifiers:{mandatory:["fn"]}},to:[{key_code:"e",modifiers:["left_control"]}],type:"basic"}},
+    {g:"nav", k:["Del"], n:"Delete forward", cust:false,
+     m:{description:"Delete Forward",from:{key_code:"delete_forward"},to:[{key_code:"delete_or_backspace",modifiers:["fn"]}],type:"basic"}},
+
+    {g:"dead", k:["ScrLk"], n:"Scroll Lock → F14", cust:true,
+     m:{description:"Scroll Lock -> F14",from:{key_code:"scroll_lock"},to:[{key_code:"f14"}],type:"basic"}},
+    {g:"dead", k:["Pause"], n:"Pause → F15", cust:true,
+     m:{description:"Pause -> F15",from:{key_code:"pause"},to:[{key_code:"f15"}],type:"basic"}},
+    {g:"dead", k:["Ins"], n:"Insert → F16", cust:true,
+     m:{description:"Insert -> F16",from:{key_code:"insert"},to:[{key_code:"f16"}],type:"basic"}},
+
+    {g:"disable", k:["F5"], n:"F5 disabled", cust:true,
+     m:{description:"F5 (bare) -> disabled (vk_none). Fn+F5 still passes through as a literal function key.",from:{key_code:"f5"},to:[{key_code:"vk_none"}],type:"basic"}},
+    {g:"disable", k:["F6"], n:"F6 disabled", cust:true,
+     m:{description:"F6 (bare) -> disabled (vk_none). Fn+F6 still passes through as a literal function key.",from:{key_code:"f6"},to:[{key_code:"vk_none"}],type:"basic"}},
+    {g:"disable", k:["F7"], n:"F7 disabled", cust:true,
+     m:{description:"F7 (bare) -> disabled (vk_none). Fn+F7 still passes through as a literal function key.",from:{key_code:"f7"},to:[{key_code:"vk_none"}],type:"basic"}},
+    {g:"disable", k:["F8"], n:"F8 disabled", cust:true,
+     m:{description:"F8 (bare) -> disabled (vk_none). Fn+F8 still passes through as a literal function key.",from:{key_code:"f8"},to:[{key_code:"vk_none"}],type:"basic"}},
+    {g:"disable", k:["F12"], n:"F12 disabled", cust:true,
+     m:{description:"F12 (bare) -> disabled (vk_none). Fn+F12 still passes through as a literal function key.",from:{key_code:"f12"},to:[{key_code:"vk_none"}],type:"basic"}},
+
+    {g:"numlock", k:["NumLk"], n:"Num Lock → start the screensaver", cust:true,
+     m:{description:"Num Lock -> Start Screensaver (moved off Fn+Esc, which toggles FN lock)",from:{key_code:"keypad_num_lock"},to:[{shell_command:"open -a ScreenSaverEngine"}],type:"basic"}},
+
+    {g:"swap", k:["LCmd"], n:"left Cmd → left Opt", cust:false,
+     m:{description:"Swap left_command -> left_option",from:{key_code:"left_command",modifiers:{optional:["any"]}},to:[{key_code:"left_option"}],type:"basic"}},
+    {g:"swap", k:["LAlt"], n:"left Opt → left Cmd", cust:false,
+     m:{description:"Swap left_option -> left_command",from:{key_code:"left_option",modifiers:{optional:["any"]}},to:[{key_code:"left_command"}],type:"basic"}},
+    {g:"swap", k:["RAlt"], n:"right Opt → right Cmd", cust:false,
+     m:{description:"Swap right_option -> right_command",from:{key_code:"right_option",modifiers:{optional:["any"]}},to:[{key_code:"right_command"}],type:"basic"}},
+    {g:"swap", k:["RCtrl"], n:"right Ctrl → right Opt", cust:false,
+     m:{description:"Swap right_control -> right_option",from:{key_code:"right_control",modifiers:{optional:["any"]}},to:[{key_code:"right_option"}],type:"basic"}}
+  ];
+
+  var GROUPS = [
+    {id:"capture", title:"Screenshots and capture",
+     note:"The Xbox Game Bar row, turned into the macOS equivalents. These four need FN lock engaged on the board — otherwise the F-row sends media keys and none of them fire."},
+    {id:"padlock", title:"The padlock key",
+     note:"It sends L and left Command together rather than a key of its own, so this has to be a simultaneous rule. No mandatory-modifier version can work."},
+    {id:"nav", title:"Navigation and editing",
+     note:"Terminal-compatible line movement, and a forward delete that behaves the way macOS expects."},
+    {id:"dead", title:"Keys macOS ignores",
+     note:"Scroll Lock, Pause and Insert do nothing on a Mac. Sending F14 to F16 makes them assignable in any application that accepts a function key."},
+    {id:"disable", title:"F-keys silenced",
+     note:"Disabled rather than repurposed, so macOS never imposes its own meaning on them. Fn plus the key still passes through as a literal function key. Repurpose any of them instead if you would rather."},
+    {id:"numlock", title:"Num Lock",
+     note:"Moved off Fn+Esc, which the board reserves for toggling FN lock."},
+    {id:"swap", title:"Modifier swaps",
+     note:"Windows layout to Mac layout. Take these as a set — enabling some but not all is how you end up with two Option keys and no Command."}
+  ];
+
+  var state = RULES.map(function(){ return {on:true, choice:"keep"}; });
+
+  var KEYROWS = [
+    {zone:"FUNCTION ROW", keys:["F1","F2","F3","F4","F5","F6","F7","F8","F12","PrtSc","ScrLk","Pause"]},
+    {zone:"EDIT / NAV",   keys:["Ins","Home","End","Del","Lock","NumLk"]},
+    {zone:"MODIFIERS",    keys:["LCmd","LAlt","RAlt","RCtrl"]}
+  ];
+
+  var groupsEl = document.getElementById("groups");
+  var out = document.getElementById("json");
+  var countEl = document.getElementById("count");
+  var warnEl = document.getElementById("warn");
+  var km = document.getElementById("km");
+
+  function choiceHTML(sel){
+    return CHOICES.map(function(c){
+      return '<option value="'+c[0]+'"'+(c[0]===sel?" selected":"")+">"+c[1]+"</option>";
+    }).join("");
+  }
+
+  function drawKeymap(){
+    var live = {};
+    RULES.forEach(function(r,i){ if(state[i].on) r.k.forEach(function(k){ live[k]=true; }); });
+    var svg = "", y = 14;
+    KEYROWS.forEach(function(row){
+      svg += '<text class="zone" x="0" y="'+(y-4)+'">'+row.zone+"</text>";
+      var x = 0;
+      row.keys.forEach(function(k){
+        var w = k.length > 4 ? 46 : (k.length > 2 ? 40 : 32);
+        var on = !!live[k];
+        svg += '<rect class="cap'+(on?" on":"")+'" x="'+x+'" y="'+y+'" width="'+w+'" height="26" rx="3"/>';
+        svg += '<text class="lab'+(on?" on":"")+'" x="'+(x+w/2)+'" y="'+(y+17)+'" text-anchor="middle">'+k+"</text>";
+        x += w + 5;
+      });
+      y += 48;
+    });
+    km.innerHTML = svg;
+  }
+
+  function render(){
+    groupsEl.innerHTML = GROUPS.map(function(g){
+      var rows = "";
+      RULES.forEach(function(r,i){
+        if (r.g !== g.id) return;
+        var st = state[i];
+        rows += '<div class="rule'+(st.on?" on":"")+'">' +
+          '<input type="checkbox" data-i="'+i+'" data-f="on"'+(st.on?" checked":"")+' aria-label="'+r.n+'">' +
+          '<div class="body"><div class="name">'+r.n+"</div>" +
+          '<div class="meta">'+r.k.join(" · ")+"</div>" +
+          (r.cust && st.on
+            ? '<select data-i="'+i+'" data-f="choice" aria-label="Action for '+r.n+'">'+choiceHTML(st.choice)+"</select>"
+            : "") +
+          "</div></div>";
+      });
+      return '<div class="group"><div class="group-head"><h3>'+g.title+"</h3>" +
+        '<button class="gtoggle" type="button" data-g="'+g.id+'">toggle all</button></div>' +
+        '<p class="gnote">'+g.note+"</p>"+rows+"</div>";
+    }).join("");
+    drawKeymap();
+    build();
+  }
+
+  function build(){
+    var man = [];
+    RULES.forEach(function(r,i){
+      if (!state[i].on) return;
+      var m = JSON.parse(JSON.stringify(r.m));
+      var ch = CHOICE[state[i].choice];
+      if (ch && ch.to){
+        m.to = JSON.parse(JSON.stringify(ch.to));
+        m.description = m.description.split(" -> ")[0] + " -> " + ch.label;
+      }
+      m.conditions = JSON.parse(JSON.stringify(COND));
+      man.push(m);
+    });
+    out.textContent = JSON.stringify({description:"8BitDo Retro108 MacMap with Karabiner", manipulators:man}, null, 2);
+    countEl.textContent = man.length + " of " + RULES.length;
+
+    var w = [];
+    var swaps = RULES.map(function(r,i){ return r.g === "swap" ? state[i].on : null; }).filter(function(x){ return x !== null; });
+    var onCount = swaps.filter(Boolean).length;
+    if (onCount > 0 && onCount < swaps.length){
+      w.push("Some modifier swaps are on and some are off. Partial swaps are how you end up with two Option keys and no Command — take the group as a set.");
+    }
+    var pr0 = state[0].on, pr1 = state[1].on;
+    if (pr1 && !pr0){
+      w.push("Print Screen now has only its bare rule. That is fine, but F1 will no longer capture an area.");
+    }
+    if (!man.length) w.push("Nothing is enabled, so this rule set does nothing.");
+    warnEl.hidden = !w.length;
+    warnEl.textContent = w.join(" ");
+  }
+
+  groupsEl.addEventListener("change", function(e){
+    var t = e.target;
+    if (!t.dataset || t.dataset.i === undefined) return;
+    var i = +t.dataset.i;
+    if (t.dataset.f === "on") state[i].on = t.checked;
+    else state[i].choice = t.value;
+    render();
+  });
+
+  groupsEl.addEventListener("click", function(e){
+    var g = e.target.dataset && e.target.dataset.g;
+    if (!g) return;
+    var idx = [];
+    RULES.forEach(function(r,i){ if (r.g === g) idx.push(i); });
+    var allOn = idx.every(function(i){ return state[i].on; });
+    idx.forEach(function(i){ state[i].on = !allOn; });
+    render();
+  });
+
+  document.getElementById("copy").addEventListener("click", function(){
+    var btn = this, text = out.textContent;
+    function done(){
+      btn.textContent = "Copied"; btn.classList.add("done");
+      setTimeout(function(){ btn.textContent = "Copy"; btn.classList.remove("done"); }, 1600);
+    }
+    function fallback(){
+      var ta = document.createElement("textarea");
+      ta.value = text; document.body.appendChild(ta); ta.select();
+      try { document.execCommand("copy"); done(); } catch(err){ btn.textContent = "Select and copy"; }
+      document.body.removeChild(ta);
+    }
+    if (navigator.clipboard && navigator.clipboard.writeText){
+      navigator.clipboard.writeText(text).then(done, fallback);
+    } else { fallback(); }
+  });
+
+  document.getElementById("themer").addEventListener("click", function(){
+    var r = document.documentElement, now = r.getAttribute("data-theme");
+    var dark = now ? now === "dark" : window.matchMedia("(prefers-color-scheme: dark)").matches;
+    r.setAttribute("data-theme", dark ? "light" : "dark");
+  });
+
+  render();
+})();
+</script>
+
+</body>
+</html>
