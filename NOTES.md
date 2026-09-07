@@ -149,11 +149,42 @@ If no keys have been swapped yet, they're the two keys labelled **'B'** and **A*
 
 The four **3.5mm jacks** on the back of a 108 model are labeled A, B, X, and Y. **They are not audio jacks.** 
 The manual says "Interfaces for 8BitDo Super Buttons are for 8BitDo Keyboard Extensions only." That means these can be used for *additional*, external Super Buttons. They are set in the same manner as the keyboard version.
-Note: The 108 comes with one set of external Super Buttons. Despite also being labeled **B** and **A**, they will be recognized as different Super Buttons from the keyboard. With four external Super Buttons, that creates ten Super Button options. That's in addition to the handful of unused keyboard keys that can be customized.
+Note: The 108 comes with one set of external Super Buttons. Despite also being labeled **B** and **A**, they will be recognized as different Super Buttons from the keyboard.
+
+**How many that comes to is unresolved.** Two on the board plus four jacks is six. Ten only follows if each jack drives a two-button unit — four jacks at two buttons each, plus the on-board pair. The manual's diagram pages are vector art with no text layer, so this could not be settled from the PDF. Treat the count as six to ten pending a look at the hardware; every figure below scales with it. Either way it is in addition to the handful of unused keyboard keys that can be customized.
 
 ### **To reach A/B from Karabiner**
 
 Use the chord trick: record an unused combination, e.g. (`Ctrl`+`Alt`+`Shift`+`F9`) onto a Super Button with Fast Key Mapping, then catch that chord in a rule. The button then triggers anything a manipulator can express, including a `shell_command`.
+
+### **What to record onto a Super Button**
+
+Fast Key Mapping records **physical keypresses**, so nothing a Super Button emits is unique
+to it — the keys that recorded the combination can always send it again. Uniqueness has to
+come from a combination nobody presses by accident, and that is a structural requirement
+rather than caution.
+
+Which combination matters more than it looks, because **the recorded chord competes with
+this rule set's own modifier swaps.** The swaps source `left_command`, `left_option`,
+`right_option` and `right_control`. A rule catching a chord built from any of those is
+order-dependent against the swap manipulators: placed above them it sees pre-swap flags,
+placed below them post-swap. That is a genuinely confusing bug to chase.
+
+The four physical modifiers this rule set never touches are `left_shift`, `right_shift`,
+`left_control` and `right_command`. So:
+
+| Recording | Modifiers spent | Free of 8 | Verdict |
+|---|---|---|---|
+| Two non-modifier keys, e.g. `F9`+`F10` | 0 | 8 | Best case, and *unverified* — depends on the firmware emitting both within a `simultaneous` window |
+| `left_shift`+`right_shift`+`F9` | 2 | 6 | **Best safe recording.** Unswapped, unclaimed by macOS, never typed by accident |
+| `Ctrl`+`Alt`+`Shift`+`F9` | 3 | 5 | Works, but spends a swapped modifier and leaves less headroom |
+
+Two further points are *unverified* and both matter. Whether two Super Buttons can be
+chorded with each other depends on whether the firmware emits one combination fully before
+starting the next — if it does, no `simultaneous` threshold can catch them. And whether a
+Super Button can carry a hold at all depends on whether the firmware sustains the key-down
+or merely pulses it; the indicator blinking on each press hints at a pulse. If it pulses,
+`to_if_held_down` is unavailable on these buttons.
 
 ### **Do not use Fast Key Swap.** 
 
