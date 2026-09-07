@@ -147,6 +147,11 @@
   .rule .warnflag{color:var(--accent);font-size:12px;margin-top:4px;}
   .holdwrap{display:flex;align-items:center;gap:8px;margin-top:6px;flex-wrap:wrap;}
   .holdlab{font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--ink-3);letter-spacing:.06em;}
+  .rule input[type=text]{
+    font-family:'Archivo',sans-serif;font-size:13px;color:var(--ink);
+    background:var(--raise);border:1px solid var(--line);border-radius:var(--radius);
+    padding:6px 8px;min-width:0;
+  }
   .rule select{
     margin-top:7px;font-family:'Archivo',sans-serif;font-size:13px;color:var(--ink);
     background:var(--raise);border:1px solid var(--line);border-radius:var(--radius);
@@ -201,6 +206,23 @@
         <p class="capnote">Highlighted keys are the ones your current selection changes.</p>
       </div>
       <div id="groups"></div>
+
+      <h2 style="margin-top:26px;">Super Buttons</h2>
+      <p class="gnote">The board's own pair, plus up to eight more through the four 3.5mm
+      jacks on the back &mdash; two to ten buttons that this rule set otherwise ignores
+      entirely. All of this is tested on hardware: a programmed Super Button emits its
+      recorded combination where Karabiner can see it, accepts modifiers on top, sustains a
+      hold, and chords with another Super Button.</p>
+      <p class="gnote"><strong>Record onto each button</strong> with <span class="mono">&#9733;</span>
+      (Fast Key Mapping): press <span class="mono">&#9733;</span>, then
+      <span class="mono">left_shift</span> + <span class="mono">right_shift</span> + the key
+      below, then the Super Button. Both shifts are deliberate &mdash; this rule set never
+      swaps either one, macOS claims neither, and nobody presses both by accident.</p>
+      <div id="supers"></div>
+      <button class="linkish" type="button" id="addsuper">Add a Super Button</button>
+
+      <div id="sbchords" style="margin-top:18px;"></div>
+      <button class="linkish" type="button" id="addsbchord" hidden>Add a chord across two of them</button>
     </div>
 
     <div class="out">
@@ -325,6 +347,20 @@
   ];
 
   var state = RULES.map(function(){ return {on:true, choice:"keep", hold:"none"}; });
+
+  // Terminal keys safe to record: none of them is touched by the 22 rules, and
+  // with both shifts held none is a combination anyone types.
+  var SB_KEYS = ["f9","f10","f11","f12",
+    "keypad_1","keypad_2","keypad_3","keypad_4","keypad_5",
+    "keypad_6","keypad_7","keypad_8","keypad_9"];
+  var SB_MODS = ["left_shift","right_shift"];
+  // Seeded with the on-board pair, unassigned, so the section explains itself
+  // without changing the default output.
+  var SUPERS = [
+    {label:"A (on the board)", key:"f9",  act:"none", hold:"none"},
+    {label:"B (on the board)", key:"f10", act:"none", hold:"none"}
+  ];
+  var SBCHORDS = [];
   var splitSwaps = false;
   var askSplit = false;
 
@@ -374,6 +410,11 @@
   var warnEl = document.getElementById("warn");
   var km = document.getElementById("km");
 
+  function holdHTML(selected){
+    return HOLD_CHOICES.map(function(c){
+      return '<option value="'+c[0]+'"'+(c[0]===selected?" selected":"")+">"+c[1]+"</option>";
+    }).join("");
+  }
   function choiceHTML(sel){
     return CHOICES.map(function(c){
       return '<option value="'+c[0]+'"'+(c[0]===sel?" selected":"")+">"+c[1]+"</option>";
@@ -508,11 +549,67 @@
       return '<div class="group">'+head+'<p class="gnote">'+g.note+"</p>"+rows+"</div>";
     }).join("");
     drawKeymap();
+    renderSupers();
     build();
+  }
+
+  function sbKeyHTML(sel){
+    return SB_KEYS.map(function(k){
+      return '<option value="'+k+'"'+(k===sel?" selected":"")+">"+k+"</option>";
+    }).join("");
+  }
+  function sbPickHTML(i, which, sel){
+    return '<select class="mod" data-sbc="'+i+'" data-f="'+which+'" aria-label="Super Button">' +
+      SUPERS.map(function(sb, n){
+        return '<option value="'+n+'"'+(String(n)===String(sel)?" selected":"")+">"+
+          (sb.label || ("Button "+(n+1)))+"</option>";
+      }).join("") + "</select>";
+  }
+  function renderSupers(){
+    document.getElementById("supers").innerHTML = SUPERS.map(function(sb, i){
+      var live = sb.act !== "none" || sb.hold !== "none";
+      return '<div class="rule'+(live?" on":"")+'" style="display:block;">' +
+        '<div class="variant">' +
+        '<input type="text" data-sb="'+i+'" data-f="label" value="'+
+          String(sb.label).replace(/"/g,"&quot;")+'" placeholder="what to call it" ' +
+          'aria-label="Name for this Super Button" style="flex:1 1 170px;">' +
+        '<span class="holdlab">records</span>' +
+        '<select class="mod" data-sb="'+i+'" data-f="key" aria-label="Terminal key recorded onto it">' +
+          sbKeyHTML(sb.key) + "</select>" +
+        '<button class="kill" type="button" data-sbkill="'+i+'" title="Remove" aria-label="Remove">&times;</button>' +
+        "</div>" +
+        '<div class="variant"><span class="holdlab">does</span>' +
+        '<select class="act" data-sb="'+i+'" data-f="act" aria-label="Action">'+choiceHTML2(sb.act)+"</select></div>" +
+        '<div class="variant" style="margin-bottom:0;"><span class="holdlab">on hold</span>' +
+        '<select class="act" data-sb="'+i+'" data-f="hold" aria-label="Action when held">'+holdHTML(sb.hold)+"</select></div>" +
+        "</div>";
+    }).join("");
+
+    document.getElementById("addsbchord").hidden = SUPERS.length < 2;
+    document.getElementById("sbchords").innerHTML = SBCHORDS.map(function(c, i){
+      return '<div class="rule'+(c.act!=="none"?" on":"")+'" style="display:block;">' +
+        '<div class="variant">' + sbPickHTML(i,"a",c.a) +
+        '<span class="holdlab" style="flex:0 0 auto;">+</span>' + sbPickHTML(i,"b",c.b) +
+        '<button class="kill" type="button" data-sbckill="'+i+'" title="Remove" aria-label="Remove">&times;</button>' +
+        "</div>" +
+        '<div class="variant" style="margin-bottom:0;"><span class="holdlab">does</span>' +
+        '<select class="act" data-sbc="'+i+'" data-f="act" aria-label="Action for this chord">'+
+        choiceHTML2(c.act)+"</select></div></div>";
+    }).join("");
+  }
+
+  // The rule list uses "keep" for "as written"; a Super Button has nothing
+  // written yet, so it needs the no-action option instead.
+  function choiceHTML2(sel){
+    return HOLD_CHOICES.map(function(c){
+      return '<option value="'+c[0]+'"'+(c[0]===sel?" selected":"")+">"+
+        (c[0]==="none" ? "— no action —" : c[1])+"</option>";
+    }).join("");
   }
 
   function build(){
     var man = [];
+    var w = [];
     RULES.forEach(function(r,i){
       if (!state[i].on) return;
       var m = JSON.parse(JSON.stringify(r.m));
@@ -534,10 +631,61 @@
       m.conditions = JSON.parse(JSON.stringify(COND));
       man.push(m);
     });
-    out.textContent = JSON.stringify({description:"8BitDo Retro108 MacMap with Karabiner", manipulators:man}, null, 2);
-    countEl.textContent = man.length + " of " + RULES.length;
+    // Super Buttons ride after the repair set: their triggers are disjoint from
+    // all 22, so order against them is free. Chords still precede their own
+    // singles, or the single would match first and the chord never fire.
+    SBCHORDS.forEach(function(c){
+      if (c.act === "none") return;
+      var A = SUPERS[+c.a], B = SUPERS[+c.b];
+      if (!A || !B || c.a === c.b || A.key === B.key) return;
+      man.push({
+        description: "Super Buttons " + (A.label||"A") + " + " + (B.label||"B") +
+                     " -> " + CHOICE[c.act].label,
+        from: {
+          simultaneous: [{key_code:A.key}, {key_code:B.key}],
+          simultaneous_options: {key_down_order:"insensitive", key_up_order:"insensitive"},
+          modifiers: {mandatory: SB_MODS.slice()}
+        },
+        // 18ms measured between the two reports; 20 would leave 2ms of margin.
+        parameters: {"basic.simultaneous_threshold_milliseconds": 50},
+        to: JSON.parse(JSON.stringify(CHOICE[c.act].to)),
+        type: "basic",
+        conditions: JSON.parse(JSON.stringify(COND))
+      });
+    });
 
-    var w = [];
+    SUPERS.forEach(function(sb){
+      var a = sb.act !== "none" ? CHOICE[sb.act] : null;
+      var h = sb.hold !== "none" ? CHOICE[sb.hold] : null;
+      if (!a && !h) return;
+      var m = {
+        description: "Super Button " + (sb.label || sb.key) + " -> " +
+          (a ? CHOICE[sb.act].label : "") +
+          (a && h ? ", " : "") + (h ? CHOICE[sb.hold].label + " on hold" : ""),
+        from: {key_code: sb.key, modifiers: {mandatory: SB_MODS.slice(), optional:["caps_lock"]}}
+      };
+      if (h){
+        if (a) m.to_if_alone = JSON.parse(JSON.stringify(a.to));
+        m.to_if_held_down = JSON.parse(JSON.stringify(h.to));
+        m.parameters = {"basic.to_if_held_down_threshold_milliseconds": 250};
+      } else {
+        m.to = JSON.parse(JSON.stringify(a.to));
+      }
+      m.type = "basic";
+      m.conditions = JSON.parse(JSON.stringify(COND));
+      man.push(m);
+    });
+
+    var keyUse = {};
+    SUPERS.forEach(function(sb){
+      if (keyUse[sb.key]) w.push("Two Super Buttons are recorded to the same key (" + sb.key +
+        "), so they cannot be told apart."); 
+      keyUse[sb.key] = true;
+    });
+
+    out.textContent = JSON.stringify({description:"8BitDo Retro108 MacMap with Karabiner", manipulators:man}, null, 2);
+    countEl.textContent = man.length + " manipulators";
+
     var swaps = RULES.map(function(r,i){ return r.g === "swap" ? state[i].on : null; }).filter(function(x){ return x !== null; });
     var onCount = swaps.filter(Boolean).length;
     if (onCount > 0 && onCount < swaps.length){
@@ -583,6 +731,51 @@
     RULES.forEach(function(r,i){ if (r.g === g) idx.push(i); });
     var allOn = idx.every(function(i){ return state[i].on; });
     idx.forEach(function(i){ state[i].on = !allOn; });
+    render();
+  });
+
+  var supersEl = document.getElementById("supers");
+  var sbcEl = document.getElementById("sbchords");
+
+  document.getElementById("addsuper").addEventListener("click", function(){
+    var used = {}; SUPERS.forEach(function(s){ used[s.key] = true; });
+    var free = SB_KEYS.filter(function(k){ return !used[k]; })[0] || SB_KEYS[0];
+    SUPERS.push({label:"", key:free, act:"none", hold:"none"});
+    render();
+  });
+  document.getElementById("addsbchord").addEventListener("click", function(){
+    if (SUPERS.length < 2) return;
+    SBCHORDS.push({a:"0", b:"1", act:"none"});
+    render();
+  });
+  function sbEdit(e){
+    var t = e.target;
+    if (!t.dataset || t.dataset.sb === undefined) return;
+    SUPERS[+t.dataset.sb][t.dataset.f] = t.value;
+    if (t.dataset.f === "label"){ build(); return; }
+    render();
+  }
+  supersEl.addEventListener("change", sbEdit);
+  supersEl.addEventListener("input", function(e){
+    if (e.target.dataset && e.target.dataset.f === "label") sbEdit(e);
+  });
+  supersEl.addEventListener("click", function(e){
+    var k = e.target.dataset && e.target.dataset.sbkill;
+    if (k === undefined) return;
+    SUPERS.splice(+k, 1);
+    SBCHORDS = SBCHORDS.filter(function(c){ return +c.a < SUPERS.length && +c.b < SUPERS.length; });
+    render();
+  });
+  sbcEl.addEventListener("change", function(e){
+    var t = e.target;
+    if (!t.dataset || t.dataset.sbc === undefined) return;
+    SBCHORDS[+t.dataset.sbc][t.dataset.f] = t.value;
+    render();
+  });
+  sbcEl.addEventListener("click", function(e){
+    var k = e.target.dataset && e.target.dataset.sbckill;
+    if (k === undefined) return;
+    SBCHORDS.splice(+k, 1);
     render();
   });
 

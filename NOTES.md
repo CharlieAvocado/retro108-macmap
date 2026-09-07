@@ -283,6 +283,11 @@ With that settled, every question about Super Buttons is answered: they are catc
 accept modifiers on top of their recording, they sustain a hold, and they chord with each
 other. The only thing they cannot do is emit a keycode the keyboard itself could not send.
 
+`builder.html` generates all of it. Name a button, pick the terminal key you recorded onto
+it, give it an action and optionally a hold, and chord any two together. The recording
+combination is fixed at both shifts for the reason above, and the terminal keys offered are
+ones none of the twenty-two rules touches.
+
 ### **Do not use Fast Key Swap.** 
 
 Holding two modifiers plus `★` swaps them at firmware level; the eligible keys are `Ctrl`, `Win`, `Alt` and `Shift`. E.g. `Win`+`Alt`+`★` swaps `Win` and `Alt`. This rule set already handles the modifier swap in Karabiner; doing both would apply it twice and cancel out. Firmware swaps are stored in the keyboard and will follow the board to other machines. None of that will show up in EventViewer. If you suspect issues, consider a factory reset.
