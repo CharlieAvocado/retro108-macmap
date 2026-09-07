@@ -151,10 +151,11 @@ The four **3.5mm jacks** on the back of a 108 model are labeled A, B, X, and Y. 
 The manual says "Interfaces for 8BitDo Super Buttons are for 8BitDo Keyboard Extensions only." That means these can be used for *additional*, external Super Buttons. They are set in the same manner as the keyboard version.
 Note: The 108 comes with one set of external Super Buttons. Despite also being labeled **B** and **A**, they will be recognized as different Super Buttons from the keyboard.
 
-**Six to ten, depending on what you plug in.** Super Buttons are sold as single-button and
-two-button units, so four jacks carry between four and eight external buttons. With the
-on-board pair that is six at minimum and **ten at maximum**. Either way it is in addition to
-the handful of unused keyboard keys that can be customized.
+**Two to ten, depending on what is plugged in.** The on-board pair is always there, so two
+is the floor — nothing external required, and nothing to lose. Super Buttons are sold as
+single-button and two-button units, so the four jacks carry between nothing and eight more,
+putting the maximum at **ten**. All of it is in addition to the handful of unused keyboard
+keys that can be customized.
 
 ### **To reach A/B from Karabiner**
 
@@ -208,20 +209,25 @@ states for sixty-four buys nothing. What matters is that a chord built from a sw
 modifier is order-dependent against the swap rules, which is a bug that appears to come and
 go. Pick unswapped modifiers and the question never arises.
 
-**The whole approach is unverified, and one capture settles it.** The `★` key programs a
-Super Button — press `★`, type the combination, press the button — so `★` is not involved in
-firing it afterwards. The premise is that a programmed Super Button then emits its
-combination like any keyboard would, and that Karabiner sees it. That is what the method
-above assumes and it has not been confirmed on this hardware. Record a combination onto one
-button and watch `Karabiner-EventViewer`: if the keystrokes appear, everything here follows,
-and if nothing appears, none of it does.
+**This works — tested, not inferred.** The `★` key programs a Super Button: press `★`, type
+the combination, press the button. `★` is not involved in firing it afterwards. A programmed
+Super Button emits its recorded combination exactly as the keyboard would, and
+`Karabiner-EventViewer` shows the keystrokes, so a rule can catch them. That was the
+premise the whole approach rested on and it holds.
 
-Two narrower points are also unverified. Whether two Super Buttons can be chorded with each
-other depends on whether the firmware emits one combination fully before starting the next —
-if it does, no `simultaneous` threshold can catch them. And whether a Super Button can carry
-a hold depends on whether the firmware sustains the key-down or merely pulses it; the
-indicator blinking on each press hints at a pulse, which would put `to_if_held_down` out of
-reach on these buttons.
+An unmapped Super Button, by contrast, sends nothing at all — which is why the on-board pair
+is invisible until you record something onto it.
+
+Three narrower points remain *unverified*, in descending order of how much they matter:
+
+- **Whether a modifier held at press time reaches the rule.** Holding `Ctrl` while pressing a
+  Super Button ought to merge into the same event, the way it does across separate devices,
+  but that has not been checked here. Every modifier-fanout figure depends on it.
+- **Whether a Super Button can carry a hold.** `to_if_held_down` needs a sustained key-down.
+  If the firmware pulses the combination instead, holds are unavailable on these buttons. The
+  indicator blinking on each press hints at a pulse.
+- **Whether two Super Buttons can be chorded together.** If the firmware emits one
+  combination fully before starting the next, no `simultaneous` threshold can catch them.
 
 ### **Do not use Fast Key Swap.** 
 
