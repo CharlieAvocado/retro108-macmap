@@ -145,6 +145,8 @@
   .rule .name{font-size:14px;font-weight:500;}
   .rule .meta{font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--ink-3);margin-top:2px;}
   .rule .warnflag{color:var(--accent);font-size:12px;margin-top:4px;}
+  .holdwrap{display:flex;align-items:center;gap:8px;margin-top:6px;flex-wrap:wrap;}
+  .holdlab{font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--ink-3);letter-spacing:.06em;}
   .rule select{
     margin-top:7px;font-family:'Archivo',sans-serif;font-size:13px;color:var(--ink);
     background:var(--raise);border:1px solid var(--line);border-radius:var(--radius);
@@ -186,8 +188,9 @@
     <button class="themer" id="themer" type="button">Theme</button>
   </header>
 
-  <p class="sub">All twenty-two rules, switched on. Turn off anything you do not want and
-  change the ones whose output is a matter of taste. The file assembles below in the
+  <p class="sub">All twenty-two rules, switched on. Turn off anything you do not want,
+  change the ones whose output is a matter of taste, and give any of those a second action
+  on hold. The file assembles below in the
   original order, which matters — a broad rule above a narrow one hides it. Nothing leaves
   this page.</p>
 
@@ -246,6 +249,10 @@
   var CHOICE = {};
   CHOICES.forEach(function(c){ CHOICE[c[0]] = {label:c[1], to:c[2]}; });
 
+  var HOLD_CHOICES = [["none","— no hold action —",null]].concat(
+    CHOICES.filter(function(c){ return c[0] !== "keep"; }));
+  HOLD_CHOICES.forEach(function(c){ if (!CHOICE[c[0]]) CHOICE[c[0]] = {label:c[1], to:c[2]}; });
+
   // The twenty-two manipulators, verbatim from retro108-macmap.json.
   var RULES = [
     {g:"capture", k:["F1"], n:"F1 → screenshot an area", cust:false,
@@ -259,7 +266,7 @@
     {g:"capture", k:["F4"], n:"F4 → F13, for Discord and similar", cust:true,
      m:{description:"F4 (sends Win+Alt+M) -> F13 for Discord and other software  [needs FN lock engaged]",from:{key_code:"m",modifiers:{mandatory:["left_command","left_option"]}},to:[{key_code:"f13"}],type:"basic"}},
 
-    {g:"padlock", k:["Lock"], n:"Padlock key → lock the screen", cust:true,
+    {g:"padlock", k:["Lock"], n:"Padlock key → lock the screen", cust:true, noHold:true,
      m:{description:"Padlock key (l + left_command within 20ms) -> Lock Screen",from:{simultaneous:[{key_code:"l"},{key_code:"left_command"}],simultaneous_options:{key_down_order:"insensitive",key_up_order:"insensitive"},modifiers:{optional:["any"]}},parameters:{"basic.simultaneous_threshold_milliseconds":20},to:[{key_code:"q",modifiers:["left_command","left_control"]}],type:"basic"}},
 
     {g:"nav", k:["Home"], n:"Fn+Home → start of line", cust:false,
@@ -317,7 +324,7 @@
      note:"Windows layout to Mac layout. Offered as one switch because they only make sense together; splitting them is possible but asks first."}
   ];
 
-  var state = RULES.map(function(){ return {on:true, choice:"keep"}; });
+  var state = RULES.map(function(){ return {on:true, choice:"keep", hold:"none"}; });
   var splitSwaps = false;
   var askSplit = false;
 
@@ -488,6 +495,11 @@
             (r.cust && st.on
               ? '<select data-i="'+i+'" data-f="choice" aria-label="Action for '+r.n+'">'+choiceHTML(st.choice)+"</select>"
               : "") +
+            (r.cust && st.on && !r.noHold
+              ? '<div class="holdwrap"><span class="holdlab">on hold</span>' +
+                '<select data-i="'+i+'" data-f="hold" aria-label="Action when '+r.n+' is held">' +
+                holdHTML(st.hold)+"</select></div>"
+              : "") +
             "</div></div>";
         });
         head = '<div class="group-head"><h3>'+g.title+"</h3>" +
@@ -508,6 +520,16 @@
       if (ch && ch.to){
         m.to = JSON.parse(JSON.stringify(ch.to));
         m.description = m.description.split(" -> ")[0] + " -> " + ch.label;
+      }
+      var hd = state[i].hold !== "none" ? CHOICE[state[i].hold] : null;
+      if (hd && hd.to && !r.noHold){
+        // A tap and a hold are separate keys in the JSON; `to` must go.
+        m.to_if_alone = m.to;
+        delete m.to;
+        m.to_if_held_down = JSON.parse(JSON.stringify(hd.to));
+        m.parameters = m.parameters || {};
+        m.parameters["basic.to_if_held_down_threshold_milliseconds"] = 250;
+        m.description = m.description + ", " + hd.label + " on hold";
       }
       m.conditions = JSON.parse(JSON.stringify(COND));
       man.push(m);
@@ -541,6 +563,7 @@
     if (!t.dataset || t.dataset.i === undefined) return;
     var i = +t.dataset.i;
     if (t.dataset.f === "on") state[i].on = t.checked;
+    else if (t.dataset.f === "hold") state[i].hold = t.value;
     else state[i].choice = t.value;
     render();
   });

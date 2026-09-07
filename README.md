@@ -13,7 +13,7 @@ Two files do the work:
 | File | What |
 |---|---|
 | `INDEX.md` | A map of everything here, and where to start |
-| `builder.html` | An offline page listing all 22 rules with a switch on each, assembling the file as you go. GitHub shows it as source — download it, or enable Pages |
+| `builder.html` | Lists all 22 rules with a switch on each and a second action on hold, assembling the file as you go. Clicking it here shows source, not a page — download it, or enable Pages. See `INDEX.md` |
 | `retro108-macmap.json` | The rule set. A bare `{description, manipulators}` object |
 | `NOTES.md` | The lab notebook — why each rule is shaped the way it is, the Karabiner behaviour that traps people, how to diagnose a rule that will not fire, and what the board's firmware can do on its own. Read it before changing anything |
 

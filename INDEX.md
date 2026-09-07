@@ -22,7 +22,7 @@ Everything in this repository, what it is for, and where to start.
 |---|---|---|
 | `README.md` | Setup and the keymap | First. It is the only file you must read |
 | `retro108-macmap.json` | The rule set. Twenty-two manipulators | You are pasting it into Karabiner |
-| `builder.html` | An offline page listing all twenty-two rules with a switch on each, and a choice of action for the ones whose output is a matter of taste. Assembles the file as you go | You want some of the rules but not all |
+| `builder.html` | Lists all twenty-two rules with a switch on each, a choice of action for the ones whose output is a matter of taste, and a second action on hold for any of those. Assembles the file as you go | You want some of the rules but not all |
 | `NOTES.md` | The lab notebook: the reasoning, the traps, and the deliberate non-fixes | Before changing anything, and any time something surprises you |
 | `Retro-108-Mechanical-Keyboard.pdf` | 8BitDo's own booklet, kept here so the `FN` combinations and the key legends are to hand | You need the layout, the `FN` row, or to check what a key sends on Windows |
 | `LICENSE` | MIT | — |
@@ -49,14 +49,18 @@ a narrow one hides it. Keep the array in the order it ships in; the builder pres
 
 ---
 
-## Viewing `builder.html`
+## Getting to `builder.html`
 
-GitHub shows HTML files as source rather than rendering them. Two ways round it:
+**Clicking it in the file list will not open it.** GitHub renders HTML as source code, never
+as a page, and no setting changes that. Two routes that do work:
 
-- **Download the file and open it in a browser.** It is self-contained and works offline.
-- **Enable GitHub Pages** for this repository (`Settings → Pages`, source: deploy from the
-  default branch). The builder is then live at
-  `https://<owner>.github.io/<repo>/builder.html`.
+- **Download the file and open it in a browser.** It is self-contained and needs no network.
+- **Enable GitHub Pages** for this repository (`Settings → Pages`, source: deploy from `main`
+  at the root). The builder is then live at `https://<owner>.github.io/<repo>/builder.html`,
+  and putting that address in the repository's **About** panel gives it a visible front door
+  — without that, nothing in the repository view leads to the site.
+
+The sibling `retror8-macmap` is set up that way already, if you want to see the shape of it.
 
 ---
 
