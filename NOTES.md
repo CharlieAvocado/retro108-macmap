@@ -218,16 +218,29 @@ premise the whole approach rested on and it holds.
 An unmapped Super Button, by contrast, sends nothing at all — which is why the on-board pair
 is invisible until you record something onto it.
 
-Three narrower points remain *unverified*, in descending order of how much they matter:
+Three further questions, two of them now settled by capture.
 
-- **Whether a modifier held at press time reaches the rule.** Holding `Ctrl` while pressing a
-  Super Button ought to merge into the same event, the way it does across separate devices,
-  but that has not been checked here. Every modifier-fanout figure depends on it.
-- **Whether a Super Button can carry a hold.** `to_if_held_down` needs a sustained key-down.
-  If the firmware pulses the combination instead, holds are unavailable on these buttons. The
-  indicator blinking on each press hints at a pulse.
-- **Whether two Super Buttons can be chorded together.** If the firmware emits one
-  combination fully before starting the next, no `simultaneous` threshold can catch them.
+**A modifier held at press time does reach the rule.** Holding `left_control` while pressing
+a Super Button programmed to `left_shift`+`right_shift`+`F9` produced an `f9` key-down
+carrying `left_control, left_shift, right_shift` in its flags. So a Super Button can take
+mandatory modifiers on top of its recorded combination, and the modifier fan-out is real
+rather than assumed. Use an unswapped modifier, for the reason given above.
+
+**A Super Button sustains its key-down; it does not pulse.** Four presses of the same button
+held the `f9` key-down for 109 ms, 1,683 ms, 3,521 ms and 630 ms — tracking how long the
+button was actually held. `to_if_held_down` therefore works on these buttons, and the
+indicator blinking on each press means nothing about the report duration.
+
+**The emission order is not stable**, which is worth knowing before building anything on it.
+Across four presses of one button the two shifts arrived `left`→`right` twice and
+`right`→`left` once. This is harmless for an ordinary rule, because modifiers are matched as
+flags rather than as a sequence — but any `simultaneous` rule involving a Super Button must
+set `key_down_order: insensitive`, exactly as the padlock rule does.
+
+**Still open:** whether two Super Buttons can be chorded with each other. That needs a second
+button programmed to a different combination, then a capture showing whether the two
+combinations overlap in time or run one after the other. If the firmware finishes one before
+starting the next, no `simultaneous` threshold can catch them.
 
 ### **Do not use Fast Key Swap.** 
 
