@@ -160,6 +160,27 @@ the handful of unused keyboard keys that can be customized.
 
 Use the chord trick: record an unused combination, e.g. (`Ctrl`+`Alt`+`Shift`+`F9`) onto a Super Button with Fast Key Mapping, then catch that chord in a rule. The button then triggers anything a manipulator can express, including a `shell_command`.
 
+### **How much this actually buys**
+
+Rough arithmetic, for scale rather than precision. The twenty-two rules cover eleven keys
+whose output is a matter of taste; with a hold on each that is twenty-one triggers the
+picker can address today. Six to ten Super Buttons add that many again — discrete, labelled,
+and reachable without spending any modifier state. Fanning every trigger out across the
+modifier combinations Karabiner can distinguish pushes the theoretical ceiling into the
+thousands.
+
+**A caveat on those numbers.** They have not been independently checked, and the modifier
+count rests on judgement calls — whether side-specific names count as distinct triggers,
+whether `fn` belongs in the total, how many `simultaneous` members are realistic. Read them
+as an order of magnitude and assume some of the detail is wrong. What is not in doubt is the
+shape of the answer: the ceiling sits far past anything a person could remember, and further
+past anything a person needs.
+
+Which is why the Super Buttons are the interesting part and the big numbers are not. Ten
+labelled physical switches cost nothing to recall — location does the remembering. A
+thousand modifier states charge recall on every single use, and nothing on the desk tells
+you they exist.
+
 ### **What to record onto a Super Button**
 
 Fast Key Mapping records **physical keypresses**, so nothing a Super Button emits is unique
