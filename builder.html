@@ -27,6 +27,8 @@
     --code-bg:#232019;
     --code-ink:#E9E3D5;
     --ok:#4A7A46;
+    --nred:#E60012;       /* the dial index marks */
+    --led:#A8473D;        /* the power indicator, lit but dim */
     --radius:3px;
   }
   @media (prefers-color-scheme: dark){
@@ -36,6 +38,7 @@
       --cap:#3A3730; --line:#35322B;
       --accent:#DC5A4C; --accent-soft:#3B211D; --accent-ink:#17150F;
       --code-bg:#101009; --code-ink:#DDD7C7; --ok:#7FB07A;
+      --nred:#FF2A38; --led:#D45F52;
     }
   }
   :root[data-theme="dark"]{
@@ -44,6 +47,7 @@
     --cap:#3A3730; --line:#35322B;
     --accent:#DC5A4C; --accent-soft:#3B211D; --accent-ink:#17150F;
     --code-bg:#101009; --code-ink:#DDD7C7; --ok:#7FB07A;
+    --nred:#FF2A38; --led:#D45F52;
   }
 
   *{box-sizing:border-box;}
@@ -88,6 +92,10 @@
   .keymap .strip{fill:none;stroke:var(--line);stroke-width:1;}
   .keymap .knob{fill:none;stroke:var(--ink-3);stroke-width:1;}
   .keymap .dot{fill:var(--ink-3);}
+  .keymap .mark{stroke:var(--nred);stroke-width:1.6;stroke-linecap:round;}
+  .keymap .icon{fill:var(--ink-2);}
+  .keymap .icon-line{fill:none;stroke:var(--ink-2);stroke-width:1.1;stroke-linecap:round;}
+  .keymap .led{fill:var(--led);}
   .keymap .cap{fill:var(--cap);stroke:var(--line);stroke-width:.8;}
   .keymap .cap.on{fill:var(--accent);stroke:var(--accent);}
   .keymap .lab{font-family:'IBM Plex Mono',monospace;font-size:7.5px;fill:var(--ink-2);}
@@ -105,6 +113,26 @@
   }
   .group-head .gtoggle:hover{color:var(--accent);border-color:var(--accent);}
   .gnote{font-size:12.5px;color:var(--ink-3);margin:0 0 9px;max-width:70ch;}
+
+  .linkish{
+    background:none;border:1px solid var(--line);color:var(--ink-2);
+    font-family:'Archivo',sans-serif;font-size:12.5px;
+    border-radius:var(--radius);padding:6px 11px;cursor:pointer;margin-top:8px;
+  }
+  .linkish:hover{border-color:var(--accent);color:var(--accent);}
+  .confirm{
+    border:1px solid var(--accent);border-left-width:3px;background:var(--accent-soft);
+    border-radius:0 var(--radius) var(--radius) 0;padding:12px 14px;margin-top:8px;
+  }
+  .confirm p{margin:0 0 10px;font-size:13px;color:var(--ink);max-width:64ch;}
+  .confirm .row{display:flex;gap:8px;flex-wrap:wrap;}
+  .confirm button{
+    font-family:'Archivo',sans-serif;font-size:13px;font-weight:600;
+    border-radius:var(--radius);padding:7px 13px;cursor:pointer;border:1px solid var(--accent);
+  }
+  .confirm .yes{background:var(--accent);color:var(--accent-ink);}
+  .confirm .no{background:var(--raise);color:var(--ink);border-color:var(--line);}
+  .confirm .no:hover{border-color:var(--ink-3);}
 
   .rule{
     background:var(--panel);border:1px solid var(--line);border-left:3px solid var(--cap);
@@ -291,6 +319,7 @@
 
   var state = RULES.map(function(){ return {on:true, choice:"keep"}; });
   var splitSwaps = false;
+  var askSplit = false;
 
   // Full-size layout as drawn in the manual: standard ANSI, plus FN / Mute /
   // Calculator / Screen-lock above the numpad. [x, y, width, label, id, height]
@@ -354,11 +383,37 @@
     var svg = '<rect class="case" x="-9" y="-45" width="593" height="212" rx="9"/>';
     // top strip: mode switch, volume knob, three round buttons, indicators
     svg += '<rect class="strip" x="-3" y="-39" width="581" height="30" rx="5"/>';
-    svg += '<rect class="knob" x="3" y="-34" width="11" height="20" rx="3"/>';
-    svg += '<circle class="knob" cx="26" cy="-24" r="10"/>';
-    [50,70,90].forEach(function(cx){ svg += '<circle class="knob" cx="'+cx+'" cy="-24" r="8"/>'; });
-    [470,495,520].forEach(function(cx){ svg += '<circle class="dot" cx="'+cx+'" cy="-24" r="2"/>'; });
+
+    // Two dials, mode and volume, each with an index mark at twelve o'clock.
+    [10, 32].forEach(function(cx){
+      svg += '<circle class="knob" cx="'+cx+'" cy="-24" r="10"/>';
+      svg += '<line class="mark" x1="'+cx+'" y1="-24" x2="'+cx+'" y2="-34"/>';
+    });
+
+    // Pair, fast key mapping, profile.
+    [54, 76, 98].forEach(function(cx){
+      svg += '<circle class="knob" cx="'+cx+'" cy="-24" r="8"/>';
+    });
+    // wifi, on the pair button
+    svg += '<circle class="icon" cx="54" cy="-20.6" r="1.1"/>';
+    svg += '<path class="icon-line" d="M 51.7,-22.6 A 3.1,3.1 0 0 1 56.3,-22.6"/>';
+    svg += '<path class="icon-line" d="M 50.1,-24.7 A 5.4,5.4 0 0 1 57.9,-24.7"/>';
+    // star, on the fast key mapping button
+    svg += '<path class="icon" d="M 76,-28.4 L 77.3,-25.6 L 80.2,-25.3 L 78,-23.4 L 78.7,-20.6 '+
+           'L 76,-22.1 L 73.3,-20.6 L 74,-23.4 L 71.8,-25.3 L 74.7,-25.6 Z"/>';
+    // heart, on the profile button
+    svg += '<path class="icon" d="M 98,-20.4 C 93.6,-23.7 95.5,-27.3 98,-25.2 '+
+           'C 100.5,-27.3 102.4,-23.7 98,-20.4 Z"/>';
+
+    // Indicator dots, centred over FN, Mute and Calc.
+    [0,1,2].forEach(function(n){
+      var cx = (19 + n)*U + (U - GAP)/2;
+      svg += '<circle class="dot" cx="'+cx+'" cy="-24" r="2"/>';
+    });
+
+    // Power indicator: the oval, with a dim LED at its right-hand end.
     svg += '<rect class="knob" x="545" y="-31" width="28" height="14" rx="7"/>';
+    svg += '<circle class="led" cx="566.5" cy="-24" r="4.5"/>';
 
     LAYOUT.forEach(function(k){
       var x = k[0]*U, y = k[1]*U, w = k[2]*U - GAP, h = (k[5] || 1)*U - GAP;
@@ -394,7 +449,16 @@
           '<div class="meta">' + idx.map(function(i){ return RULES[i].k[0]; }).join(" · ") + "</div>" +
           '<div class="meta" style="margin-top:5px;">left Cmd and Opt exchanged, right Opt to Cmd, right Ctrl to Opt</div>' +
           "</div></div>" +
-          '<button class="addv" type="button" data-split="1">split them individually</button>';
+          (askSplit
+            ? '<div class="confirm"><p><strong>Are you sure?</strong> These four are written ' +
+              'as a set. Turning on only some of them almost always gives you a keyboard you ' +
+              'did not want — most often two Option keys and no Command at all, which then ' +
+              'makes it awkward to get back into Karabiner and undo.</p>' +
+              '<div class="row">' +
+              '<button class="yes" type="button" data-split="yes">Split them anyway</button>' +
+              '<button class="no" type="button" data-split="no">Keep them as a set</button>' +
+              "</div></div>"
+            : '<button class="linkish" type="button" data-split="ask">Set them individually…</button>');
         head = '<div class="group-head"><h3>'+g.title+"</h3></div>";
       } else {
         RULES.forEach(function(r,i){
@@ -465,14 +529,12 @@
   });
 
   groupsEl.addEventListener("click", function(e){
-    if (e.target.dataset && e.target.dataset.split){
-      var ok = window.confirm(
-        "The four modifier swaps are written as a set.\n\n" +
-        "Enabling only some of them almost always produces a keyboard you do not want — " +
-        "most often two Option keys and no Command at all, which then makes it awkward to " +
-        "get back into Karabiner and undo.\n\n" +
-        "Split them into four separate switches anyway?");
-      if (ok){ splitSwaps = true; render(); }
+    var sp = e.target.dataset && e.target.dataset.split;
+    if (sp){
+      if (sp === "ask") askSplit = true;
+      else if (sp === "no") askSplit = false;
+      else if (sp === "yes"){ splitSwaps = true; askSplit = false; }
+      render();
       return;
     }
     var g = e.target.dataset && e.target.dataset.g;
